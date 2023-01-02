@@ -1,15 +1,48 @@
 {
-  "name": "nestjs-auth",
+  "name": "@industriously/nestjs-auth",
   "version": "0.0.1",
-  "description": "Oauth2 Auth Module in NestJS",
-  "main": "index.js",
+  "description": "Oauth2 Auth Module to NestJS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "build": "rimraf ./dist && tsc -p ./tsconfg.build.json"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^9.2.1",
+    "@nestjs/core": "^9.2.1",
+    "@nestjs/testing": "^9.2.1",
+    "@types/jest": "^29.2.5",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "~5.47.1",
+    "@typescript-eslint/parser": "~5.47.1",
+    "eslint": "8.31.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "jest": "^29.3.1",
+    "prettier": "^2.8.1",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^7.8.0",
+    "ts-jest": "^29.0.3",
+    "typescript": "~4.9.4"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com-industriously:industriously/nestjs-auth.git"
   },
-  "author": "",
-  "license": "ISC"
+  "bugs": {
+    "url": "https://github.com/industriously/nestjs-auth/issues"
+  },
+  "keywords": [
+    "nestjs-auth",
+    "nest-auth",
+    "auth",
+    "Oauth2",
+    "passport"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
