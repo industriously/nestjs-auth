@@ -46,6 +46,6 @@
     "access": "public"
   },
   "dependencies": {
-    "googleapis": "^110.0.0"
+    "google-auth-library": "^8.7.0"
   }
 }
