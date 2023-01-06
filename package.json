@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest",
     "test:cov": "jest --coverage",
-    "build": "rimraf ./dist && tsc -p ./tsconfg.build.json"
+    "build": "rimraf ./dist && tsc -p ./tsconfig.build.json"
   },
   "devDependencies": {
     "@nestjs/common": "^9.2.1",
@@ -44,5 +44,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "google-auth-library": "^8.7.0"
   }
 }
