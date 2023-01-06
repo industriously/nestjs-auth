@@ -5,3 +5,5 @@ export interface Strategy {
   readonly isOauthCallback: (path: string) => boolean;
   readonly authorize: (request: Request) => Promise<void>;
 }
+
+export type GuardVerify = (req: Request, exception: unknown) => true;

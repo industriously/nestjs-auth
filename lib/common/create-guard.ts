@@ -1,4 +1,4 @@
-import { Strategy } from '@INTERFACE/common.interface';
+import { GuardVerify, Strategy } from '@INTERFACE/common.interface';
 import {
   CanActivate,
   ExecutionContext,
@@ -16,8 +16,8 @@ import { Request, Response } from 'express';
  */
 export const createAuthGuard = (
   strategy: Strategy,
-  verify: (req: Request, exception: unknown) => Promise<boolean> = async () =>
-    true,
+  exception: unknown,
+  verify: GuardVerify = () => true,
 ) => {
   @Injectable()
   class Guard implements CanActivate {
@@ -30,7 +30,7 @@ export const createAuthGuard = (
         ? await strategy.authorize(request)
         : response.redirect(strategy.OAUTH2_URI);
 
-      return verify(request, new UnauthorizedException());
+      return verify(request, exception ?? new UnauthorizedException());
     }
   }
 

@@ -12,6 +12,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#installation">Installation</a></li>
+    <li><a href="#example">example</a></li>
   </ol>
 </details>
 
@@ -20,5 +21,28 @@
 ## Installation
 
 ```sh
-npm i @industriously/nestjs-auth
+npm i @rojiwon/nestjs-auth
+```
+
+<!-- EXAMPLE -->
+
+## Example
+
+```typescript
+import { GoogleStrategy, decode_jwt } from '@rojiwon/nestjs-auth';
+
+const Strategy = GoogleStrategy({
+  // options
+});
+export const GoogleAuthGuard = createAuthGuard(
+  Strategy,
+  new UnauthorizedException('구글 인증 실패'),
+);
+```
+
+```typescript
+// in controller
+  @Get('login')
+  @UseGuards(GoogleAuthGuard)
+  login(){ return; }
 ```

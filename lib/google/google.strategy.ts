@@ -1,5 +1,6 @@
 import { Strategy } from '@INTERFACE/common.interface';
 import { GoogleOauth2Options } from '@INTERFACE/google.interface';
+import { decode_jwt } from 'lib/util';
 import { get_client, get_credentials, get_oauth2_uri } from './api';
 
 export const GoogleStrategy = (options: GoogleOauth2Options): Strategy => {
@@ -15,7 +16,7 @@ export const GoogleStrategy = (options: GoogleOauth2Options): Strategy => {
         return;
       }
       const { id_token } = await get_credentials(client)(code);
-      (request as any).user = id_token;
+      (request as any).user = decode_jwt(id_token as string);
       return;
     },
   };
