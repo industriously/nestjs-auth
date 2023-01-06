@@ -1,6 +1,6 @@
 {
-  "name": "@industriously/nestjs-auth",
-  "version": "0.0.1",
+  "name": "@rojiwon/nestjs-auth",
+  "version": "1.0.0",
   "description": "Oauth2 Auth Module to NestJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
