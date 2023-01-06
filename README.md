@@ -31,7 +31,7 @@ npm i @rojiwon/nestjs-auth
 ```typescript
 import { GoogleStrategy, decode_jwt } from '@rojiwon/nestjs-auth';
 
-const Strategy = GoogleStrategy({
+const Strategy = new GoogleStrategy({
   // options
 });
 export const GoogleAuthGuard = createAuthGuard(
