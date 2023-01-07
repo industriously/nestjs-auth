@@ -29,20 +29,59 @@ npm i @rojiwon/nestjs-auth
 ## Example
 
 ```typescript
-import { GoogleStrategy, decode_jwt } from '@rojiwon/nestjs-auth';
+import { ConfigService } from '@nestjs/config';
+import { GoogleStrategy as Strategy, AuthGuard } from '@rojiwon/nestjs-auth';
 
-const Strategy = new GoogleStrategy({
-  // options
-});
-export const GoogleAuthGuard = createAuthGuard(
-  Strategy,
-  new UnauthorizedException('구글 인증 실패'),
-);
+@Injectable()
+export class GoogleStrategy extends Strategy {
+  constructor(configService: ConfigService) {
+    super({
+      client_id: configService.get('CLIENT_ID'),
+      client_secret: configService.get('CLIENT_SECRET'),
+      redirect_uri: configService.get('OAUTH_CALLBACK'),
+      scope: ['email', 'profile'],
+    });
+  }
+  validate(request: Request): boolean {
+    // custom validate logic
+    return true;
+  }
+}
+
+// in module
+@Module({
+  providers: [
+    {
+      provide: Strategy,
+      useClass: GoogleStrategy,
+    },
+  ],
+})
+export class AppModule {}
+
+// If you wan't to use default strategy.
+@Module({
+  providers: [
+    {
+      inject: [ConfigService],
+      provide: Strategy,
+      useFactory(config: ConfigService) {
+        return new Strategy({
+          client_id: config.get('CLIENT_ID'),
+          client_secret: config.get('CLIENT_SECRET'),
+          redirect_uri: config.get('OAUTH_CALLBACK'),
+          scope: ['email', 'profile'],
+        });
+      },
+    },
+  ],
+})
+export class AppModule {}
 ```
 
 ```typescript
-// in controller
-  @Get('login')
-  @UseGuards(GoogleAuthGuard)
-  login(){ return; }
+  // in controller
+  @Get("sign-in")
+  @UseGuards(AuthGuard)
+  signIn(){ return; }
 ```
