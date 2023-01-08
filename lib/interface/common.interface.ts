@@ -2,8 +2,10 @@ import { Request } from 'express';
 
 export interface Strategy {
   readonly OAUTH2_URI: string;
-  readonly isOauthCallback: (path: string) => boolean;
+  readonly redirect_uri: string;
+  readonly isOauthCallback: (request: Request) => boolean;
   readonly authorize: (request: Request) => Promise<void>;
+  readonly validate: (request: Request) => boolean;
 }
 
-export type GuardVerify = (req: Request, exception: unknown) => true;
+export type GuardVerify = (req: Request) => true;

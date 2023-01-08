@@ -10,6 +10,6 @@ export interface GoogleOauth2ClientOptions {
 /**
  * 구글 로그인을 위해 필요한 모든 options
  */
-export interface GoogleOauth2Options extends GoogleOauth2ClientOptions {
+export interface GoogleStrategyOptions extends GoogleOauth2ClientOptions {
   readonly scope: string[] | string;
 }

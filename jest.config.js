@@ -11,6 +11,7 @@ module.exports = {
   testMatch: ['**/*.test.ts'],
   moduleNameMapper: {
     '^lib/(.*)$': '<rootDir>/lib/$1',
+    '@LIB/(.*)$': '<rootDir>/lib/$1',
     '@INTERFACE/(.*)$': '<rootDir>/lib/interface/$1',
   },
   collectCoverageFrom: ['lib/**/*.(t|j)s'],
