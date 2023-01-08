@@ -1,5 +1,7 @@
 # nestjs-auth
 
+[![npm version](https://badge.fury.io/js/@rojiwon%2Fnestjs-auth.svg)](https://badge.fury.io/js/@rojiwon%2Fnestjs-auth)
+
 - A way to apply Oauth2 Auth module to nestjs
 
 ```sh
