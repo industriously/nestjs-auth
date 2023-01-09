@@ -7,5 +7,3 @@ export interface Strategy {
   readonly authorize: (request: Request) => Promise<void>;
   readonly validate: (request: Request) => boolean;
 }
-
-export type GuardVerify = (req: Request) => true;
