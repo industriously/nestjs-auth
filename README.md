@@ -34,18 +34,28 @@ npm i @rojiwon/nestjs-auth
 import { ConfigService } from '@nestjs/config';
 import { AbstractGoogleStrategy } from '@rojiwon/nestjs-auth';
 
+interface GoogleProfile {
+  name: string;
+  email: string;
+}
 @Injectable()
-export class GoogleStrategy extends AbstractGoogleStrategy {
+export class GoogleStrategy extends AbstractGoogleStrategy<
+  'user',
+  GoogleProfile
+> {
   constructor(configService: ConfigService) {
     super({
       client_id: configService.get('CLIENT_ID'),
       client_secret: configService.get('CLIENT_SECRET'),
       redirect_uri: configService.get('OAUTH_CALLBACK'),
       scope: ['email', 'profile'],
+      key: 'user',
     });
   }
-  validate(request: Request): boolean {
-    // custom validate logic
+  validate(data: GoogleProfile | undefined): boolean {
+    if (data?.name == undefined || data?.email == undefined) {
+      return false;
+    }
     return true;
   }
 }

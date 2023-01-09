@@ -1,3 +1,5 @@
+import { NotRequestKey } from './common.interface';
+
 /**
  * oauth2 client option
  */
@@ -10,6 +12,8 @@ export interface GoogleOauth2ClientOptions {
 /**
  * 구글 로그인을 위해 필요한 모든 options
  */
-export interface GoogleStrategyOptions extends GoogleOauth2ClientOptions {
+export interface GoogleStrategyOptions<T = 'user'>
+  extends GoogleOauth2ClientOptions {
   readonly scope: string[] | string;
+  readonly key: NotRequestKey<T>;
 }
