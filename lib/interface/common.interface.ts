@@ -7,7 +7,7 @@ export interface Strategy<T = unknown> {
   readonly authorize: (request: Request) => Promise<void>;
   readonly getData: (request: Request) => T | undefined;
   readonly setData: (request: Request, data: T) => void;
-  readonly validate: (data: T | undefined) => boolean;
+  readonly validate: (request: Request) => boolean;
 }
 
 export type NotRequestKey<T> = T extends keyof Request ? never : T;

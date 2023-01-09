@@ -46,5 +46,5 @@ export abstract class AbstractGoogleStrategy<K, T> implements Strategy<T> {
     return;
   }
 
-  abstract validate(data: T | undefined): boolean;
+  abstract validate(request: Request): boolean;
 }
