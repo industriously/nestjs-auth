@@ -23,6 +23,11 @@ export abstract class AbstractGoogleStrategy<K, T> implements Strategy<T> {
     return (request as any)[this.key];
   }
 
+  setData(request: Request, data: T): void {
+    (request as any)[this.key] = data;
+    return;
+  }
+
   isOauthCallback(request: Request) {
     const { pathname } = new URL(this.redirect_uri);
     return request.route.path === pathname;
@@ -34,7 +39,10 @@ export abstract class AbstractGoogleStrategy<K, T> implements Strategy<T> {
       return;
     }
     const { id_token } = await this.getCredentials(code);
-    (request as any)[this.key] = decode_jwt(id_token as string);
+    const data = decode_jwt<T>(id_token as string);
+    if (data) {
+      this.setData(request, data);
+    }
     return;
   }
 
