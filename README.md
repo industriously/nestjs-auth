@@ -32,7 +32,7 @@ npm i @rojiwon/nestjs-auth
 
 ```typescript
 import { ConfigService } from '@nestjs/config';
-import { GoogleStrategy as Strategy, AuthGuard } from '@rojiwon/nestjs-auth';
+import { GoogleStrategy as Strategy } from '@rojiwon/nestjs-auth';
 
 @Injectable()
 export class GoogleStrategy extends Strategy {
@@ -82,8 +82,11 @@ export class AppModule {}
 ```
 
 ```typescript
+import { GoogleStrategy, AuthGuard } from '@rojiwon/nestjs-auth';
+
   // in controller
+  // GoogleStrategy is just token, @Inject(token)
   @Get("sign-in")
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard(GoogleStrategy))
   signIn(){ return; }
 ```
