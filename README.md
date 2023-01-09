@@ -1,13 +1,12 @@
 # nestjs-auth
 
-[![npm version](https://badge.fury.io/js/@rojiwon%2Fnestjs-auth.svg)](https://badge.fury.io/js/@rojiwon%2Fnestjs-auth)
+[![npm version](https://badge.fury.io/js/@devts%2Fnestjs-auth.svg)](https://badge.fury.io/js/@devts%2Fnestjs-auth)
 
 - A way to apply Oauth2 Auth module to nestjs
 
 ```sh
-  passport를 사용하지 않습니다.
-  passport보다 type-safe합니다.
-  하나의 라이브러리만 설치하면 적용가능합니다.
+  more type-safe than passport
+  install only once
 ```
 
 <details>
@@ -23,7 +22,7 @@
 ## Installation
 
 ```sh
-npm i @rojiwon/nestjs-auth
+npm i @devts/nestjs-auth
 ```
 
 <!-- EXAMPLE -->
