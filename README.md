@@ -32,10 +32,10 @@ npm i @rojiwon/nestjs-auth
 
 ```typescript
 import { ConfigService } from '@nestjs/config';
-import { GoogleStrategy as Strategy } from '@rojiwon/nestjs-auth';
+import { AbstractGoogleStrategy } from '@rojiwon/nestjs-auth';
 
 @Injectable()
-export class GoogleStrategy extends Strategy {
+export class GoogleStrategy extends AbstractGoogleStrategy {
   constructor(configService: ConfigService) {
     super({
       client_id: configService.get('CLIENT_ID'),
@@ -54,27 +54,8 @@ export class GoogleStrategy extends Strategy {
 @Module({
   providers: [
     {
-      provide: Strategy,
+      provide: 'GoogleStrategy',
       useClass: GoogleStrategy,
-    },
-  ],
-})
-export class AppModule {}
-
-// If you wan't to use default strategy.
-@Module({
-  providers: [
-    {
-      inject: [ConfigService],
-      provide: Strategy,
-      useFactory(config: ConfigService) {
-        return new Strategy({
-          client_id: config.get('CLIENT_ID'),
-          client_secret: config.get('CLIENT_SECRET'),
-          redirect_uri: config.get('OAUTH_CALLBACK'),
-          scope: ['email', 'profile'],
-        });
-      },
     },
   ],
 })
@@ -82,11 +63,11 @@ export class AppModule {}
 ```
 
 ```typescript
-import { GoogleStrategy, AuthGuard } from '@rojiwon/nestjs-auth';
+import { AuthGuard } from '@rojiwon/nestjs-auth';
 
   // in controller
-  // GoogleStrategy is just token, @Inject(token)
+  // Inject decorator get "GoogleStrategy" token
   @Get("sign-in")
-  @UseGuards(AuthGuard(GoogleStrategy))
+  @UseGuards(AuthGuard("GoogleStrategy"))
   signIn(){ return; }
 ```

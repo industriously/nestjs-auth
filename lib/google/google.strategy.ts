@@ -1,13 +1,11 @@
 import { Strategy } from '@INTERFACE/common.interface';
 import { GoogleStrategyOptions } from '@INTERFACE/google.interface';
-import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Credentials } from 'google-auth-library';
 import { decode_jwt } from '@LIB/util';
 import { get_client, get_credentials, get_oauth2_uri } from './api';
 
-@Injectable()
-export class GoogleStrategy implements Strategy {
+export abstract class AbstractGoogleStrategy implements Strategy {
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
   protected readonly getCredentials: (code: string) => Promise<Credentials>;
@@ -34,7 +32,5 @@ export class GoogleStrategy implements Strategy {
     return;
   }
 
-  validate(request: Request): boolean {
-    return true;
-  }
+  abstract validate(request: Request): boolean;
 }
