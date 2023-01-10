@@ -5,7 +5,9 @@ import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
 import type { GoogleStrategyOptions } from '@INTERFACE/google.interface';
 import type { Request } from 'express';
 
-export abstract class AbstractGoogleStrategy<K, T> implements Strategy<T> {
+export abstract class AbstractGoogleStrategy<K = 'user', T = unknown>
+  implements Strategy<T>
+{
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
   protected readonly getCredentials: (code: string) => Promise<Credentials>;
