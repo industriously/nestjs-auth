@@ -1,4 +1,4 @@
-import { NotRequestKey } from './common.interface';
+import type { NotRequestKey } from './common.interface';
 
 export interface GithubOauth2Options {
   readonly client_id: string;

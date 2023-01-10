@@ -1,4 +1,4 @@
-import { NotRequestKey } from './common.interface';
+import type { NotRequestKey } from './common.interface';
 
 /**
  * oauth2 client option

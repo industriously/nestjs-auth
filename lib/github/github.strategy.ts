@@ -1,7 +1,7 @@
-import { GithubStrategyOptions } from '@LIB/interface/github.interface';
-import { Request } from 'express';
-import { NotRequestKey, Strategy } from '@LIB/interface/common.interface';
 import { get_oauth2_uri } from './api';
+import type { GithubStrategyOptions } from '@INTERFACE/github.interface';
+import type { Request } from 'express';
+import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
 
 export abstract class AbstractGithubStrategy<K, T> implements Strategy<T> {
   readonly OAUTH2_URI: string;
@@ -16,7 +16,7 @@ export abstract class AbstractGithubStrategy<K, T> implements Strategy<T> {
     const { pathname } = new URL(this.redirect_uri);
     return request.route.path === pathname;
   }
-  authorize(request: Request): Promise<void> {
+  async authorize(request: Request): Promise<void> {
     const code = request.query.code as string;
   }
   getData(request: Request): T | undefined {

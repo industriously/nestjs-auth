@@ -1,9 +1,9 @@
-import { GoogleOauth2ClientOptions } from '@INTERFACE/google.interface';
 import {
   Credentials,
   GenerateAuthUrlOpts,
   OAuth2Client,
 } from 'google-auth-library';
+import type { GoogleOauth2ClientOptions } from '@INTERFACE/google.interface';
 
 export const get_client = ({
   client_id,
@@ -19,7 +19,5 @@ export const get_oauth2_uri =
 
 export const get_credentials =
   (client: OAuth2Client) =>
-  async (code: string): Promise<Credentials> => {
-    const { tokens } = await client.getToken(code);
-    return tokens;
-  };
+  (code: string): Promise<Credentials> =>
+    client.getToken(code).then(({ tokens }) => tokens);

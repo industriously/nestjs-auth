@@ -1,9 +1,9 @@
-import { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
-import { GoogleStrategyOptions } from '@INTERFACE/google.interface';
-import { Request } from 'express';
-import { Credentials } from 'google-auth-library';
 import { decode_jwt } from '@LIB/util';
 import { get_client, get_credentials, get_oauth2_uri } from './api';
+import type { Credentials } from 'google-auth-library';
+import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
+import type { GoogleStrategyOptions } from '@INTERFACE/google.interface';
+import type { Request } from 'express';
 
 export abstract class AbstractGoogleStrategy<K, T> implements Strategy<T> {
   readonly OAUTH2_URI: string;
