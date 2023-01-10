@@ -1,4 +1,3 @@
-import { Strategy } from '@INTERFACE/common.interface';
 import {
   CanActivate,
   ExecutionContext,
@@ -6,7 +5,8 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
+import type { Strategy } from '@INTERFACE/common.interface';
 
 export abstract class AbstractAuthGuard<T = unknown> implements CanActivate {
   constructor(protected readonly strategy: Strategy<T>) {}

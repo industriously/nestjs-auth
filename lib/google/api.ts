@@ -1,9 +1,9 @@
-import { GoogleOauth2ClientOptions } from '@INTERFACE/google.interface';
 import {
   Credentials,
   GenerateAuthUrlOpts,
   OAuth2Client,
 } from 'google-auth-library';
+import type { GoogleOauth2ClientOptions } from '@INTERFACE/google.interface';
 
 export const get_client = ({
   client_id,

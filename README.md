@@ -31,16 +31,18 @@ npm i @devts/nestjs-auth
 
 ```typescript
 import { ConfigService } from '@nestjs/config';
-import { AbstractGoogleStrategy } from '@rojiwon/nestjs-auth';
+import { AbstractGoogleStrategy } from '@devts/nestjs-auth';
+import type { Request } from 'express';
 
-interface GoogleProfile {
+interface GoogleIdTokenData {
   name: string;
   email: string;
 }
+
 @Injectable()
 export class GoogleStrategy extends AbstractGoogleStrategy<
-  'user',
-  GoogleProfile
+  'user', // this is key that assign token data in Request object. If you write a key that already used, key type in options is never
+  GoogleIdTokenData
 > {
   constructor(configService: ConfigService) {
     super({
@@ -51,10 +53,13 @@ export class GoogleStrategy extends AbstractGoogleStrategy<
       key: 'user',
     });
   }
-  validate(data: GoogleProfile | undefined): boolean {
-    if (data?.name == undefined || data?.email == undefined) {
+  validate(request: Request): boolean {
+    const data = this.getData(request); // type is GoogleIdTokenData | undefined
+    if (data == undefined) {
       return false;
     }
+    // other validate logic
+    this.setData(request, { username: name, email }); // use if you want to transform data
     return true;
   }
 }
@@ -72,11 +77,23 @@ export class AppModule {}
 ```
 
 ```typescript
-import { AuthGuard } from '@rojiwon/nestjs-auth';
+import { AuthGuard } from '@devts/nestjs-auth';
+import { Req } from '@nestjs/common';
+import type { Request } from 'expres';
 
-  // in controller
+@Controller('auth')
+export class AuthController {
   // Inject decorator get "GoogleStrategy" token
-  @Get("sign-in")
-  @UseGuards(AuthGuard("GoogleStrategy"))
-  signIn(){ return; }
+  @Get('sign-in')
+  @UseGuards(AuthGuard('GoogleStrategy'))
+  signIn() {
+    return;
+  }
+
+  @Get('YOUR REDIRECT PATH')
+  @UseGuards(AuthGuard('GoogleStrategy'))
+  callback(@Req() req: Request) {
+    return (req as any).user; // you can get data from request[key]
+  }
+}
 ```
