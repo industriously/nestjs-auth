@@ -25,7 +25,7 @@ export abstract class AbstractGoogleStrategy<K = 'user', T = unknown>
     return (request as any)[this.key];
   }
 
-  setData(request: Request, data: T): void {
+  setData<R>(request: Request, data: T | R): void {
     (request as any)[this.key] = data;
     return;
   }
