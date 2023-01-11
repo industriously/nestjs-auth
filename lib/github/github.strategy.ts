@@ -22,7 +22,7 @@ export abstract class AbstractGithubStrategy<K, T> implements Strategy<T> {
   getData(request: Request): T | undefined {
     return (request as any)[this.key];
   }
-  setData(request: Request, data: T): void {
+  setData<R>(request: Request, data: T | R): void {
     return (request as any)[this.key];
   }
   abstract validate: (request: Request) => boolean;

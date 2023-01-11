@@ -12,12 +12,18 @@ export const get_client = ({
 }: GoogleOauth2ClientOptions) =>
   new OAuth2Client(client_id, client_secret, redirect_uri);
 
+type GetOauthUrl = (options: GenerateAuthUrlOpts) => string;
+
 export const get_oauth2_uri =
-  (client: OAuth2Client) =>
-  ({ client_id, redirect_uri, scope }: GenerateAuthUrlOpts) =>
+  (client: OAuth2Client): GetOauthUrl =>
+  ({ client_id, redirect_uri, scope }) =>
     client.generateAuthUrl({ client_id, redirect_uri, scope });
 
+type GetCredentials = (code: string) => Promise<Credentials>;
+
 export const get_credentials =
-  (client: OAuth2Client) =>
-  (code: string): Promise<Credentials> =>
-    client.getToken(code).then(({ tokens }) => tokens);
+  (client: OAuth2Client): GetCredentials =>
+  async (code) => {
+    const { tokens } = await client.getToken(code);
+    return tokens;
+  };

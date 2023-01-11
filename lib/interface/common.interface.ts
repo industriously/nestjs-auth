@@ -6,7 +6,7 @@ export interface Strategy<T = unknown> {
   readonly isOauthCallback: (request: Request) => boolean;
   readonly authorize: (request: Request) => Promise<void>;
   readonly getData: (request: Request) => T | undefined;
-  readonly setData: (request: Request, data: T) => void;
+  readonly setData: <R>(request: Request, data: T | R) => void;
   readonly validate: (request: Request) => boolean;
 }
 

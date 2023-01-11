@@ -39,6 +39,11 @@ interface GoogleIdTokenData {
   email: string;
 }
 
+interface GoogleProfile {
+  username: string;
+  email: string;
+}
+
 @Injectable()
 export class GoogleStrategy extends AbstractGoogleStrategy<
   'user', // this is key that assign token data in Request object. If you write a key that already used, key type in options is never
@@ -59,7 +64,7 @@ export class GoogleStrategy extends AbstractGoogleStrategy<
       return false;
     }
     // other validate logic
-    this.setData(request, { username: name, email }); // use if you want to transform data
+    this.setData<GoogleProfile>(request, { username: name, email }); // use if you want to transform data
     return true;
   }
 }
