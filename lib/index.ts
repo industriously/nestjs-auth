@@ -7,3 +7,4 @@ export { AbstractGoogleStrategy } from './google/google.strategy';
 export type { GoogleStrategyOptions } from './interface/google.interface';
 
 // github
+export { AbstractGithubStrategy } from './github/github.strategy';

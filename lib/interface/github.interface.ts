@@ -49,7 +49,7 @@ export type GithubScope =
   | 'codespace'
   | 'workflow';
 
-export interface GithubPublicUser {
+interface GithubPublicUser {
   login: string;
   id: number;
   node_id: string;
@@ -96,7 +96,7 @@ export interface GithubPublicUser {
   suspended_at?: string | null;
 }
 
-export interface GithubPrivateUser extends GithubPublicUser {
+interface GithubPrivateUser extends GithubPublicUser {
   private_gists: number;
   total_private_repos: number;
   owned_private_repos: number;
@@ -106,6 +106,8 @@ export interface GithubPrivateUser extends GithubPublicUser {
   business_plus?: boolean;
   ldap_dn?: string;
 }
+
+export type GithubUser = GithubPublicUser | GithubPrivateUser;
 
 export interface GIthubEmail {
   email: string;

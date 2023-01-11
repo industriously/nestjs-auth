@@ -2,15 +2,15 @@ import queryString from 'querystring';
 import axios from 'axios';
 import type {
   GithubOauth2Options,
-  GithubPublicUser,
-  GithubPrivateUser,
   GIthubEmail,
+  GithubUser,
+  GithubScope,
 } from '@INTERFACE/github.interface';
 
 const OAUTH2_URL = 'https://github.com/login/oauth/authorize';
 const ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token';
-const USER_URL = 'https://github.com/user';
-const USER_EMAILS_URL = 'https://github.com/user/emails';
+const USER_URL = 'https://api.github.com/user';
+const USER_EMAILS_URL = 'https://api.github.com/user/emails';
 
 export const get_oauth2_uri = ({
   client_id,
@@ -27,7 +27,7 @@ export const get_oauth2_uri = ({
     scope: scope.join(' '),
   });
 
-type GetAccessToken = (code: string) => Promise<string>;
+export type GetAccessToken = (code: string) => Promise<string>;
 
 export const get_access_token =
   ({ client_id, client_secret }: GithubOauth2Options): GetAccessToken =>
@@ -50,24 +50,30 @@ export const get_access_token =
     return access_token;
   };
 
-export const get_profile = async (
-  token: string,
-): Promise<GithubPublicUser | GithubPrivateUser> => {
-  const headers = {
-    Authorization: 'Bearer ' + token,
-    Accept: 'application/vnd.github+json',
-    'X-Github-Api-Version': '2022-11-28',
+export type GetUser = (token: string) => Promise<GithubUser>;
+
+export const get_user =
+  (scope: GithubScope[]): GetUser =>
+  async (token) => {
+    const headers = {
+      Authorization: 'Bearer ' + token,
+      Accept: 'application/vnd.github+json',
+      'X-Github-Api-Version': '2022-11-28',
+    };
+    const [{ data }, emails] = await Promise.all([
+      axios.get<GithubUser>(USER_URL, { headers }),
+      scope.some((item) => item === 'user:email')
+        ? axios.get<GIthubEmail[]>(USER_EMAILS_URL + '?per_page=100', {
+            headers,
+          })
+        : null,
+    ]);
+
+    if (data.email == null) {
+      data.email =
+        emails?.data.find(({ primary, verified }) => primary && verified)
+          ?.email ?? null;
+    }
+
+    return data;
   };
-  const [{ data }, { data: emails }] = await Promise.all([
-    axios.get<GithubPublicUser | GithubPrivateUser>(USER_URL, { headers }),
-    axios.get<GIthubEmail[]>(USER_EMAILS_URL + '?per_page=100', { headers }),
-  ]);
-
-  if (data.email == null) {
-    data.email =
-      emails.find(({ primary, verified }) => primary && verified)?.email ??
-      null;
-  }
-
-  return data;
-};
