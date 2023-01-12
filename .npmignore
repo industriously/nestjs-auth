@@ -7,6 +7,10 @@
 coverage/**/*
 coverage/*
 
+coverage-ts/**/*
+coverage-ts/*
+
+
 .env
 .env.*
 

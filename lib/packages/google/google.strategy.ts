@@ -1,7 +1,10 @@
 import { decode_jwt } from '@LIB/utils';
 import { get_client, get_credentials, get_oauth2_uri } from './api';
-import type { NotRequestKey, Strategy } from '@COMMON/common.interface';
-import type { Request } from 'express';
+import type {
+  NotRequestKey,
+  Request,
+  Strategy,
+} from '@COMMON/common.interface';
 import type { Google } from './google.interface';
 
 export abstract class AbstractGoogleStrategy<
@@ -32,8 +35,7 @@ export abstract class AbstractGoogleStrategy<
   }
 
   isOauthCallback(request: Request) {
-    const { pathname } = new URL(this.redirect_uri);
-    return request.route.path === pathname;
+    return new URL(this.redirect_uri).pathname === request.path;
   }
 
   async authorize(request: Request): Promise<void> {

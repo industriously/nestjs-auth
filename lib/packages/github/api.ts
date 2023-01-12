@@ -1,6 +1,6 @@
 import queryString from 'querystring';
 import axios from 'axios';
-import type { Github } from '@LIB/packages/github/github.interface';
+import type { Github } from './github.interface';
 
 const OAUTH2_URL = 'https://github.com/login/oauth/authorize';
 const ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token';

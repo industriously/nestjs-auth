@@ -3,6 +3,8 @@ dist
 
 coverage
 
+coverage-ts
+
 .DS_Store
 
 .env

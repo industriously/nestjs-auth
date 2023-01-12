@@ -1,4 +1,18 @@
-import type { Request } from 'express';
+import type * as Express from 'express';
+
+interface Query {
+  [key: string]: string | string[] | Query | Query[];
+}
+
+export type Request = Express.Request<
+  { [key: string]: string },
+  object,
+  object,
+  Query,
+  Record<string, unknown>
+>;
+
+export type Response = Express.Response<object, Record<string, unknown>>;
 
 export interface Strategy<T = unknown> {
   readonly OAUTH2_URI: string;
@@ -24,7 +38,7 @@ export interface Credentials {
   readonly refresh_token_expires_in: string;
 }
 
-export type NotRequestKey<T> = T extends keyof Request
+export type NotRequestKey<T> = T extends keyof Express.Request
   ? T extends 'user'
     ? 'user'
     : never

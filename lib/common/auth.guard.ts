@@ -5,15 +5,14 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import type { Strategy } from '@LIB/common/common.interface';
+
+import type { Strategy, Request, Response } from './common.interface';
 
 export abstract class AbstractAuthGuard<T = unknown> implements CanActivate {
   constructor(protected readonly strategy: Strategy<T>) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
-
     if (this.strategy.isOauthCallback(request)) {
       await this.strategy.authorize(request);
       return this.strategy.validate(request);

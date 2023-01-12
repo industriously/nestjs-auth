@@ -34,9 +34,10 @@ export namespace Google {
     locale?: string;
     name: string;
   }
-  export type IdToken<Scope extends 'email' | 'profile'> = IdTokenDefault &
-    ('email' extends Scope ? IdTokenEmailClaim : {}) &
-    ('profile' extends Scope ? IdTokenNameClaim : {});
+  export type IdToken<Scope extends 'email' | 'profile' | '' = ''> =
+    IdTokenDefault &
+      ('email' extends Scope ? IdTokenEmailClaim : {}) &
+      ('profile' extends Scope ? IdTokenNameClaim : {});
 
   export interface Tokens extends Credentials {
     id_token: string;

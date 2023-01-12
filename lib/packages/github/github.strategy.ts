@@ -5,9 +5,12 @@ import {
   get_user,
   GetUser,
 } from './api';
-import type { Request } from 'express';
-import type { NotRequestKey, Strategy } from '@LIB/common/common.interface';
-import type { Github } from '@LIB/packages/github/github.interface';
+import type {
+  NotRequestKey,
+  Request,
+  Strategy,
+} from '@COMMON/common.interface';
+import type { Github } from './github.interface';
 
 export abstract class AbstractGithubStrategy<
   K extends string = 'user',
@@ -28,8 +31,7 @@ export abstract class AbstractGithubStrategy<
     this.key = key;
   }
   isOauthCallback(request: Request): boolean {
-    const { pathname } = new URL(this.redirect_uri);
-    return request.route.path === pathname;
+    return new URL(this.redirect_uri).pathname === request.path;
   }
   async authorize(request: Request): Promise<void> {
     const code = request.query.code as string;
