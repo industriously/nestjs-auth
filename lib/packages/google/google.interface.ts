@@ -1,4 +1,4 @@
-import type { NotRequestKey, Credentials } from './common.interface';
+import type { NotRequestKey, Credentials } from '../../common/common.interface';
 
 export namespace Google {
   export interface Oauth2Options {

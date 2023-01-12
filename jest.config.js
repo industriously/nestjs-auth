@@ -12,7 +12,7 @@ module.exports = {
   moduleNameMapper: {
     '^lib/(.*)$': '<rootDir>/lib/$1',
     '@LIB/(.*)$': '<rootDir>/lib/$1',
-    '@INTERFACE/(.*)$': '<rootDir>/lib/interface/$1',
+    '@COMMON/(.*)$': '<rootDir>/lib/common/$1',
   },
   collectCoverageFrom: ['lib/**/*.(t|j)s'],
   coveragePathIgnorePatterns: ['lib/index.ts'],

@@ -1,5 +1,5 @@
 import { OAuth2Client } from 'google-auth-library';
-import type { Google } from '@INTERFACE/google.interface';
+import type { Google } from '@LIB/packages/google/google.interface';
 
 export const get_client = ({
   client_id,

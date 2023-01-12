@@ -1,19 +1,20 @@
-import { decode_jwt } from '@LIB/util';
+import { decode_jwt } from '@LIB/utils';
 import { get_client, get_credentials, get_oauth2_uri } from './api';
-import type { Credentials } from 'google-auth-library';
-import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
-import type { GoogleStrategyOptions } from '@INTERFACE/google.interface';
+import type { NotRequestKey, Strategy } from '@COMMON/common.interface';
 import type { Request } from 'express';
+import type { Google } from './google.interface';
 
-export abstract class AbstractGoogleStrategy<K = 'user', T = unknown>
-  implements Strategy<T>
+export abstract class AbstractGoogleStrategy<
+  K extends string = 'user',
+  T = unknown,
+> implements Strategy<T>
 {
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
-  protected readonly getCredentials: (code: string) => Promise<Credentials>;
+  protected readonly getCredentials: (code: string) => Promise<Google.Tokens>;
   private readonly key: NotRequestKey<K>;
 
-  constructor(options: GoogleStrategyOptions<K>) {
+  constructor(options: Google.StrategyOptions<K>) {
     const client = get_client(options);
     this.redirect_uri = options.redirect_uri;
     this.OAUTH2_URI = get_oauth2_uri(client)(options);

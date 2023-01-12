@@ -1,4 +1,4 @@
-import type { NotRequestKey } from './common.interface';
+import type { NotRequestKey } from '../../common/common.interface';
 
 export namespace Github {
   export interface Oauth2Options {

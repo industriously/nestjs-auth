@@ -1,16 +1,7 @@
 // common
 export { AuthGuard, AbstractAuthGuard } from './common/auth.guard';
-export type { Strategy } from './interface/common.interface';
+export type { Strategy, Credentials } from './common/common.interface';
+export type { Google } from './packages/google/google.interface';
+export type { Github } from './packages/github/github.interface';
 
-// google
-import { AbstractGoogleStrategy } from './google/google.strategy';
-export type { Google } from './interface/google.interface';
-
-// github
-import { AbstractGithubStrategy } from './github/github.strategy';
-export type { Github } from './interface/github.interface';
-
-export namespace AbstractStrategy {
-  export const Google = AbstractGoogleStrategy;
-  export const Github = AbstractGithubStrategy;
-}
+export { AbstractStrategy } from './strategy';

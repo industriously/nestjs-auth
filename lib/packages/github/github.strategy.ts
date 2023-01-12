@@ -6,9 +6,8 @@ import {
   GetUser,
 } from './api';
 import type { Request } from 'express';
-
-import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
-import type { Github } from '@INTERFACE/github.interface';
+import type { NotRequestKey, Strategy } from '@LIB/common/common.interface';
+import type { Github } from '@LIB/packages/github/github.interface';
 
 export abstract class AbstractGithubStrategy<
   K extends string = 'user',
