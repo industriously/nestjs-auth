@@ -6,18 +6,21 @@ import {
   GetUser,
 } from './api';
 import type { Request } from 'express';
-import type { GithubStrategyOptions } from '@INTERFACE/github.interface';
-import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
 
-export abstract class AbstractGithubStrategy<K = 'user', T = unknown>
-  implements Strategy<T>
+import type { NotRequestKey, Strategy } from '@INTERFACE/common.interface';
+import type { Github } from '@INTERFACE/github.interface';
+
+export abstract class AbstractGithubStrategy<
+  K extends string = 'user',
+  T = unknown,
+> implements Strategy<T>
 {
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
   private readonly key: NotRequestKey<K>;
   private readonly getAccessToken: GetAccessToken;
   private readonly getUser: GetUser;
-  constructor(options: GithubStrategyOptions<K>) {
+  constructor(options: Github.StrategyOptions<K>) {
     const { redirect_uri, key, scope } = options;
     this.OAUTH2_URI = get_oauth2_uri(options);
     this.getAccessToken = get_access_token(options);

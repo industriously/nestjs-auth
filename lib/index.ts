@@ -3,17 +3,14 @@ export { AuthGuard, AbstractAuthGuard } from './common/auth.guard';
 export type { Strategy } from './interface/common.interface';
 
 // google
-export { AbstractGoogleStrategy } from './google/google.strategy';
-export type {
-  GoogleStrategyOptions,
-  GoogleIdToken,
-} from './interface/google.interface';
+import { AbstractGoogleStrategy } from './google/google.strategy';
+export type { Google } from './interface/google.interface';
 
 // github
-export { AbstractGithubStrategy } from './github/github.strategy';
-export type {
-  GithubStrategyOptions,
-  GithubScope,
-  GithubUser,
-  GIthubEmail,
-} from './interface/github.interface';
+import { AbstractGithubStrategy } from './github/github.strategy';
+export type { Github } from './interface/github.interface';
+
+export namespace AbstractStrategy {
+  export const Google = AbstractGoogleStrategy;
+  export const Github = AbstractGithubStrategy;
+}

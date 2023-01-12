@@ -1,25 +1,18 @@
-import type { NotRequestKey } from './common.interface';
+import type { NotRequestKey, Credentials } from './common.interface';
 
-/**
- * oauth2 client option
- */
-export interface GoogleOauth2ClientOptions {
-  readonly client_id: string;
-  readonly client_secret: string;
-  readonly redirect_uri: string;
-}
+export namespace Google {
+  export interface Oauth2Options {
+    readonly client_id: string;
+    readonly client_secret: string;
+    readonly redirect_uri: string;
+    readonly scope: string[];
+  }
+  export interface StrategyOptions<T extends string = 'user'>
+    extends Oauth2Options {
+    readonly key: NotRequestKey<T>;
+  }
 
-/**
- * 구글 로그인을 위해 필요한 모든 options
- */
-export interface GoogleStrategyOptions<T = 'user'>
-  extends GoogleOauth2ClientOptions {
-  readonly scope: string[];
-  readonly key: NotRequestKey<T>;
-}
-
-namespace GoogleIdToken {
-  interface Default {
+  interface IdTokenDefault {
     aud: string;
     exp: string;
     iat: string;
@@ -31,21 +24,21 @@ namespace GoogleIdToken {
     picture?: string;
     profile?: string;
   }
-
-  interface EmailClaim {
+  interface IdTokenEmailClaim {
     email: string;
     email_verified: boolean;
   }
-  interface NameClaim {
+  interface IdTokenNameClaim {
     family_name?: string;
     given_name?: string;
     locale?: string;
     name: string;
   }
-  export type GoogleIdToken<Scope extends string> = Default &
-    ('email' extends Scope ? EmailClaim : {}) &
-    ('profile' extends Scope ? NameClaim : {});
-}
+  export type IdToken<Scope extends 'email' | 'profile'> = IdTokenDefault &
+    ('email' extends Scope ? IdTokenEmailClaim : {}) &
+    ('profile' extends Scope ? IdTokenNameClaim : {});
 
-export type GoogleIdToken<Scope extends 'email' | 'profile'> =
-  GoogleIdToken.GoogleIdToken<Scope>;
+  export interface Tokens extends Credentials {
+    id_token: string;
+  }
+}

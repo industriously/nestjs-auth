@@ -1,11 +1,6 @@
 import queryString from 'querystring';
 import axios from 'axios';
-import type {
-  GithubOauth2Options,
-  GIthubEmail,
-  GithubUser,
-  GithubScope,
-} from '@INTERFACE/github.interface';
+import type { Github } from '@INTERFACE/github.interface';
 
 const OAUTH2_URL = 'https://github.com/login/oauth/authorize';
 const ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token';
@@ -17,7 +12,7 @@ export const get_oauth2_uri = ({
   redirect_uri,
   scope,
   allow_signup = true,
-}: GithubOauth2Options) =>
+}: Github.Oauth2Options) =>
   OAUTH2_URL +
   '?' +
   queryString.stringify({
@@ -30,7 +25,7 @@ export const get_oauth2_uri = ({
 export type GetAccessToken = (code: string) => Promise<string>;
 
 export const get_access_token =
-  ({ client_id, client_secret }: GithubOauth2Options): GetAccessToken =>
+  ({ client_id, client_secret }: Github.Oauth2Options): GetAccessToken =>
   async (code) => {
     const {
       data: { access_token },
@@ -50,10 +45,10 @@ export const get_access_token =
     return access_token;
   };
 
-export type GetUser = (token: string) => Promise<GithubUser>;
+export type GetUser = (token: string) => Promise<Github.User>;
 
 export const get_user =
-  (scope: GithubScope[]): GetUser =>
+  (scope: Github.Scope[]): GetUser =>
   async (token) => {
     const headers = {
       Authorization: 'Bearer ' + token,
@@ -61,9 +56,9 @@ export const get_user =
       'X-Github-Api-Version': '2022-11-28',
     };
     const [{ data }, emails] = await Promise.all([
-      axios.get<GithubUser>(USER_URL, { headers }),
+      axios.get<Github.User>(USER_URL, { headers }),
       scope.some((item) => item === 'user:email')
-        ? axios.get<GIthubEmail[]>(USER_EMAILS_URL + '?per_page=100', {
+        ? axios.get<Github.Email[]>(USER_EMAILS_URL + '?per_page=100', {
             headers,
           })
         : null,
