@@ -10,4 +10,8 @@ export interface Strategy<T = unknown> {
   readonly validate: (request: Request) => boolean;
 }
 
-export type NotRequestKey<T> = T extends keyof Request ? never : T;
+export type NotRequestKey<T> = T extends keyof Request
+  ? T extends 'user'
+    ? 'user'
+    : never
+  : T;

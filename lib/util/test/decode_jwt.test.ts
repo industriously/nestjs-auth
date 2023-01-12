@@ -5,7 +5,7 @@ describe('decode_jwt unit test', () => {
     'if token is not jwt',
     (token) => {
       const result = decode_jwt(token as string);
-      expect(result).toEqual({});
+      expect(result).toEqual(undefined);
     },
   );
   it('if token is jwt', () => {

@@ -84,7 +84,7 @@ export class AppModule {}
 ```typescript
 import { AuthGuard } from '@devts/nestjs-auth';
 import { Req } from '@nestjs/common';
-import type { Request } from 'expres';
+import type { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
