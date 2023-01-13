@@ -1,4 +1,4 @@
-import type { NotRequestKey } from '../../common/common.interface';
+import type { NotRequestKey } from '@COMMON/common.interface';
 
 export namespace Github {
   export interface Oauth2Options {
@@ -118,4 +118,6 @@ export namespace Github {
     visibility: 'public' | 'private' | null;
     [k: string]: unknown;
   }
+
+  export type Target = 'user' | 'user_emails';
 }

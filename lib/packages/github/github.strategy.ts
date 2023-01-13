@@ -1,14 +1,10 @@
-import {
-  get_oauth2_uri,
-  get_access_token,
-  GetAccessToken,
-  get_user,
-  GetUser,
-} from './api';
+import { GithubSDK } from './sdk';
 import type {
   NotRequestKey,
   Request,
   Strategy,
+  Credentials,
+  SDK,
 } from '@COMMON/common.interface';
 import type { Github } from './github.interface';
 
@@ -20,23 +16,27 @@ export abstract class AbstractGithubStrategy<
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
   private readonly key: NotRequestKey<K>;
-  private readonly getAccessToken: GetAccessToken;
-  private readonly getUser: GetUser;
+  private readonly sdk: ReturnType<
+    SDK<Github.Oauth2Options, Credentials, Github.Target>
+  >;
   constructor(options: Github.StrategyOptions<K>) {
-    const { redirect_uri, key, scope } = options;
-    this.OAUTH2_URI = get_oauth2_uri(options);
-    this.getAccessToken = get_access_token(options);
-    this.getUser = get_user(scope);
+    const { redirect_uri, key } = options;
     this.redirect_uri = redirect_uri;
     this.key = key;
+    this.sdk = GithubSDK(options);
+    this.OAUTH2_URI = this.sdk.oauth_uri;
   }
   isOauthCallback(request: Request): boolean {
     return new URL(this.redirect_uri).pathname === request.path;
   }
   async authorize(request: Request): Promise<void> {
     const code = request.query.code as string;
-    const access_token = await this.getAccessToken(code);
-    const user = await this.getUser(access_token);
+    const { access_token } = await this.sdk.getCredentials(code);
+    const user = await this.sdk.query<Github.User>('user', access_token);
+    const emails = await this.sdk.query<Github.Email[]>(
+      'user_emails',
+      access_token,
+    );
     this.setData(request, user);
     return;
   }

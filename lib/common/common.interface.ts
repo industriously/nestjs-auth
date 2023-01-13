@@ -27,15 +27,15 @@ export interface Strategy<T = unknown> {
 export interface Credentials {
   readonly token_type: string;
   readonly access_token: string;
-  readonly refresh_token: string;
+  readonly refresh_token?: string;
   /**
    * numeric string (sec)
    */
-  readonly access_token_expires_in: string;
+  readonly access_token_expires_in?: string;
   /**
    * numeric string (sec)
    */
-  readonly refresh_token_expires_in: string;
+  readonly refresh_token_expires_in?: string;
 }
 
 export type NotRequestKey<T> = T extends keyof Express.Request
@@ -43,3 +43,13 @@ export type NotRequestKey<T> = T extends keyof Express.Request
     ? 'user'
     : never
   : T;
+
+export type SDK<
+  O extends object = {},
+  C extends Credentials = Credentials,
+  T extends string = string,
+> = (options: O) => {
+  readonly oauth_uri: string;
+  readonly getCredentials: (code: string) => Promise<C>;
+  readonly query: <D = unknown>(target: T, token: string) => Promise<D>;
+};
