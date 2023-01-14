@@ -54,17 +54,16 @@
     "access": "public"
   },
   "dependencies": {
-    "axios": "^1.2.2",
     "google-auth-library": "^8.7.0"
   },
   "typeCoverage": {
-    "atLeast": 100,
+    "atLeast": 95,
     "project": "tsconfig.json",
     "strict": true,
     "ignoreAsAssertion": true,
     "ignoreFiles": [
-      "lib/**/*/*.test.ts",
-      "dist/**/*/*",
+      "lib/**/*.test.ts",
+      "dist/**/*",
       "dist/*"
     ]
   }

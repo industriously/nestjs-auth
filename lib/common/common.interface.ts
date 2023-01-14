@@ -51,5 +51,17 @@ export type SDK<
 > = (options: O) => {
   readonly oauth_uri: string;
   readonly getCredentials: (code: string) => Promise<C>;
-  readonly query: <D = unknown>(target: T, token: string) => Promise<D>;
+  readonly query: (target: T, token: string) => Promise<FetcherResponse>;
+  readonly isSuccess: <T>(data: unknown, statusCode: number) => data is T;
 };
+
+export interface FetcherResponse<T = unknown> {
+  /**
+   * http statusCode ex) 200, 401...
+   */
+  statusCode: number;
+  /**
+   * http response body
+   */
+  data: T;
+}

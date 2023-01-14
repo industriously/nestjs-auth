@@ -1,7 +1,7 @@
 import queryString from 'querystring';
-import axios from 'axios';
 import type { Github } from './github.interface';
 import type { Credentials, SDK } from '@COMMON/common.interface';
+import { fetcher } from '@LIB/utils';
 
 const OAUTH2_URL = 'https://github.com/login/oauth/authorize';
 const ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token';
@@ -23,7 +23,7 @@ interface AccessTokenWithExpires extends AccessToken {
 
 const uri_mapper: Record<Github.Target, string> = {
   user: API_BASE + API_USER_PATH,
-  user_emails: API_BASE + API_USER_EMAILS_PATH + '?per_page=100',
+  user_emails: API_BASE + API_USER_EMAILS_PATH,
 };
 
 export const GithubSDK: SDK<
@@ -49,43 +49,39 @@ export const GithubSDK: SDK<
         scope: scope.join(' '),
       }),
     async getCredentials(code) {
-      const { data } = await axios.post<AccessToken | AccessTokenWithExpires>(
+      const { data, statusCode } = await fetcher.post(
         ACCESS_TOKEN_URL,
         { client_id, client_secret, code },
-        { headers: { Accept: 'application/json' } },
+        { Accept: 'application/json' },
       );
-      const { access_token, token_type } = data;
+      if (
+        !this.isSuccess<AccessToken | AccessTokenWithExpires>(data, statusCode)
+      ) {
+        throw new Error('Can not get access_token');
+      }
       return {
-        access_token,
-        token_type,
+        access_token: data.access_token,
+        token_type: data.token_type,
         ...('expires_in' in data
           ? {
+              refresh_token: data.refresh_token,
               access_token_expires_in: data.expires_in + '',
               refresh_token_expires_in: data.refresh_token_expires_in + '',
-              refresh_token: data.refresh_token,
             }
           : {}),
       };
     },
-    async query<D = unknown>(target: Github.Target, token: string) {
+    query(target: Github.Target, token: string) {
       const headers = {
         Authorization: 'Bearer ' + token,
         Accept: 'application/vnd.github+json',
         'X-Github-Api-Version': '2022-11-28',
       };
-      const { data } = await axios.get<D>(uri_mapper[target], { headers });
-      return data;
+      return fetcher.get(uri_mapper[target], headers);
+    },
+    isSuccess<T>(_: unknown, statusCode: number): _ is T {
+      // OK || Not Modified
+      return statusCode === 200 || statusCode === 304;
     },
   };
 };
-
-/** 
-    if (data.email == null) {
-      data.email =
-        emails?.data.find(({ primary, verified }) => primary && verified)
-          ?.email ?? null;
-    }
-
-    return data;
-  };
-*/

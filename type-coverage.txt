@@ -1,6 +1,0 @@
-
-> @devts/nestjs-auth@1.1.0 type-coverage
-> type-coverage --detail
-
-628 / 628 100.00%
-type-coverage success.

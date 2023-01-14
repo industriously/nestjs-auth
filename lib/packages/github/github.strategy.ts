@@ -32,13 +32,25 @@ export abstract class AbstractGithubStrategy<
   async authorize(request: Request): Promise<void> {
     const code = request.query.code as string;
     const { access_token } = await this.sdk.getCredentials(code);
-    const user = await this.sdk.query<Github.User>('user', access_token);
-    const emails = await this.sdk.query<Github.Email[]>(
-      'user_emails',
+    const { data: user, statusCode } = await this.sdk.query(
+      'user',
       access_token,
     );
+    if (!this.sdk.isSuccess<Github.User>(user, statusCode)) {
+      return;
+    }
+    if (user.email == null) {
+      const { data, statusCode } = await this.sdk.query(
+        'user_emails',
+        access_token,
+      );
+      if (this.sdk.isSuccess<Github.Email[]>(data, statusCode)) {
+        user.email =
+          data.find(({ primary, verified }) => primary && verified)?.email ??
+          null;
+      }
+    }
     this.setData(request, user);
-    return;
   }
   getData(request: Request): T | undefined {
     return (request as any)[this.key];
