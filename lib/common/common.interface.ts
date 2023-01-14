@@ -31,11 +31,11 @@ export interface Credentials {
   /**
    * numeric string (sec)
    */
-  readonly access_token_expires_in?: string;
+  readonly access_token_expires_in?: number;
   /**
    * numeric string (sec)
    */
-  readonly refresh_token_expires_in?: string;
+  readonly refresh_token_expires_in?: number;
 }
 
 export type NotRequestKey<T> = T extends keyof Express.Request

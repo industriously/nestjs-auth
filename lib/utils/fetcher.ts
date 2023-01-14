@@ -10,12 +10,20 @@ const request =
   (res: IncomingMessage) => {
     const chunks: Uint8Array[] = [];
     res.on('error', reject);
-    res.on('data', (chunk) => chunks.push(chunk));
+    res.on('data', (chunk: Uint8Array) => chunks.push(chunk));
     res.on('end', () => {
+      if (res.statusCode === undefined) {
+        resolve({
+          statusCode: 500,
+          data: { message: 'UnValid Response' },
+        });
+        return;
+      }
       const buffer = Buffer.concat(chunks);
-      const statusCode = res.statusCode!;
+      const statusCode = res.statusCode;
       try {
-        const data = buffer.length > 0 ? JSON.parse(buffer.toString()) : null;
+        const data =
+          buffer.length > 0 ? (JSON.parse(buffer.toString()) as object) : null;
         resolve({ statusCode, data });
       } catch (err) {
         resolve({ statusCode, data: buffer.toString() });
@@ -38,7 +46,9 @@ export const fetcher = {
         { headers, method: 'GET' },
         request(resolve, reject),
       );
-      req.setHeader('User-Agent', 'request');
+      if (req.getHeader('User-Agent') === undefined) {
+        req.setHeader('User-Agent', 'request');
+      }
       req.on('error', reject);
       req.end();
     });
@@ -53,7 +63,7 @@ export const fetcher = {
    */
   post(
     uri: string,
-    body: object,
+    body: object | string,
     headers: NonNullable<http.RequestOptions['headers']> = {},
   ) {
     return new Promise<FetcherResponse>((resolve, reject) => {
@@ -65,9 +75,13 @@ export const fetcher = {
         },
         request(resolve, reject),
       );
-      req.setHeader('Content-Type', 'application/json');
-      req.setHeader('User-Agent', 'request');
-      req.write(JSON.stringify(body));
+      if (req.getHeader('Content-Type') === undefined) {
+        req.setHeader('Content-Type', 'application/json');
+      }
+      if (req.getHeader('User-Agent') === undefined) {
+        req.setHeader('User-Agent', 'request');
+      }
+      req.write(typeof body === 'string' ? body : JSON.stringify(body));
       req.on('error', reject);
       req.end();
     });

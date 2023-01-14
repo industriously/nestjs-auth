@@ -1,11 +1,12 @@
 import { decode_jwt } from '@LIB/utils';
-import { get_client, get_credentials, get_oauth2_uri } from './api';
 import type {
   NotRequestKey,
   Request,
+  SDK,
   Strategy,
 } from '@COMMON/common.interface';
 import type { Google } from './google.interface';
+import { GoogleSDK } from './sdk';
 
 export abstract class AbstractGoogleStrategy<
   K extends string = 'user',
@@ -14,15 +15,13 @@ export abstract class AbstractGoogleStrategy<
 {
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
-  protected readonly getCredentials: (code: string) => Promise<Google.Tokens>;
   private readonly key: NotRequestKey<K>;
-
+  private readonly sdk: ReturnType<SDK<Google.Oauth2Options, Google.Tokens>>;
   constructor(options: Google.StrategyOptions<K>) {
-    const client = get_client(options);
     this.redirect_uri = options.redirect_uri;
-    this.OAUTH2_URI = get_oauth2_uri(client)(options);
-    this.getCredentials = get_credentials(client);
     this.key = options.key;
+    this.sdk = GoogleSDK(options);
+    this.OAUTH2_URI = this.sdk.oauth_uri;
   }
 
   getData(request: Request): T | undefined {
@@ -43,7 +42,7 @@ export abstract class AbstractGoogleStrategy<
     if (typeof code !== 'string') {
       return;
     }
-    const { id_token } = await this.getCredentials(code);
+    const { id_token } = await this.sdk.getCredentials(code);
     const data = decode_jwt<T>(id_token as string);
     if (data) {
       this.setData(request, data);

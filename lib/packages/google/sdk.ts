@@ -1,13 +1,26 @@
 import queryString from 'querystring';
 import type { SDK } from '@COMMON/common.interface';
 import type { Google } from './google.interface';
+import { fetcher } from '@LIB/utils';
 
 const OAUTH2_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+const TOKENS_URL = 'https://oauth2.googleapis.com/token';
 
+interface GoogleCredentials {
+  access_token: string;
+  expires_in: number;
+  refresh_token?: string;
+  id_token: string;
+  scope: string;
+  token_type: 'Bearer';
+}
 export const GoogleSDK: SDK<Google.Oauth2Options, Google.Tokens, string> = (
   options,
 ) => {
   const { client_id, client_secret, redirect_uri, scope } = options;
+  const scope_string = scope.some((val) => val === 'openid')
+    ? scope.join(' ')
+    : scope.join(' ') + ' openid';
   return {
     oauth_uri:
       OAUTH2_URL +
@@ -15,17 +28,43 @@ export const GoogleSDK: SDK<Google.Oauth2Options, Google.Tokens, string> = (
       queryString.stringify({
         client_id,
         redirect_uri,
-        scope: scope.join(' '),
+        scope: scope_string,
         response_type: 'code',
+        access_type: 'offline',
       }),
-    getCredentials(code) {
-      throw Error();
+    async getCredentials(code) {
+      const body = {
+        code,
+        client_id,
+        client_secret,
+        redirect_uri,
+        grant_type: 'authorization_code',
+      };
+      const { data, statusCode } = await fetcher.post(
+        TOKENS_URL,
+        queryString.stringify(body),
+        {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      );
+      if (!this.isSuccess<GoogleCredentials>(data, statusCode)) {
+        throw new Error('Can not get credentials');
+      }
+      const { access_token, expires_in, refresh_token, id_token, token_type } =
+        data;
+      return {
+        access_token,
+        access_token_expires_in: expires_in,
+        refresh_token,
+        id_token,
+        token_type,
+      };
     },
     query(target, token) {
-      throw Error();
+      throw Error('Function is not implemented.');
     },
     isSuccess<T>(data: unknown, statusCode: number): data is T {
-      throw Error();
+      return statusCode === 200 || statusCode === 304;
     },
   };
 };

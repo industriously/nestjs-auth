@@ -9,16 +9,13 @@ const API_BASE = 'https://api.github.com';
 const API_USER_PATH = '/user';
 const API_USER_EMAILS_PATH = '/user/emails';
 
-interface AccessToken {
+interface Tokens {
   access_token: string;
   token_type: string;
   scope: string;
-}
-
-interface AccessTokenWithExpires extends AccessToken {
-  expires_in: number;
-  refresh_token: string;
-  refresh_token_expires_in: number;
+  expires_in?: number;
+  refresh_token?: string;
+  refresh_token_expires_in?: number;
 }
 
 const uri_mapper: Record<Github.Target, string> = {
@@ -54,21 +51,22 @@ export const GithubSDK: SDK<
         { client_id, client_secret, code },
         { Accept: 'application/json' },
       );
-      if (
-        !this.isSuccess<AccessToken | AccessTokenWithExpires>(data, statusCode)
-      ) {
-        throw new Error('Can not get access_token');
+      if (!this.isSuccess<Tokens>(data, statusCode)) {
+        throw new Error('Can not get credentials');
       }
+      const {
+        access_token,
+        expires_in,
+        token_type,
+        refresh_token,
+        refresh_token_expires_in,
+      } = data;
       return {
-        access_token: data.access_token,
-        token_type: data.token_type,
-        ...('expires_in' in data
-          ? {
-              refresh_token: data.refresh_token,
-              access_token_expires_in: data.expires_in + '',
-              refresh_token_expires_in: data.refresh_token_expires_in + '',
-            }
-          : {}),
+        token_type,
+        access_token,
+        access_token_expires_in: expires_in,
+        refresh_token,
+        refresh_token_expires_in,
       };
     },
     query(target: Github.Target, token: string) {
