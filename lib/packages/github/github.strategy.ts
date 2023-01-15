@@ -1,11 +1,5 @@
 import { GithubSDK } from './sdk';
-import type {
-  NotRequestKey,
-  Request,
-  Strategy,
-  Credentials,
-  SDK,
-} from '@COMMON';
+import { NotRequestKey, Credentials, SDK, BaseAbstractStrategy } from '@COMMON';
 import type {
   Email,
   Oauth2Options,
@@ -14,32 +8,36 @@ import type {
   User,
 } from './github.interface';
 
-export abstract class AbstractStrategy<K extends string = 'user', T = unknown>
-  implements Strategy<T>
-{
+export abstract class AbstractStrategy<
+  K extends string = 'user',
+  T = User,
+> extends BaseAbstractStrategy<K, User, T, Credentials> {
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
-  private readonly key: NotRequestKey<K>;
+  protected readonly key: NotRequestKey<K>;
   private readonly sdk: ReturnType<SDK<Oauth2Options, Credentials, Target>>;
   constructor(options: StrategyOptions<K>) {
-    const { redirect_uri, key } = options;
-    this.redirect_uri = redirect_uri;
-    this.key = key;
+    super();
+    this.key = options.key;
+    this.redirect_uri = options.redirect_uri;
     this.sdk = GithubSDK(options);
     this.OAUTH2_URI = this.sdk.oauth_uri;
   }
-  isOauthCallback(request: Request): boolean {
-    return new URL(this.redirect_uri).pathname === request.path;
+
+  async authorize(code: string): Promise<Credentials> {
+    const credentials = await this.sdk.getCredentials(code);
+    return credentials ? credentials : this.throw();
   }
-  async authorize(request: Request): Promise<void> {
-    const code = request.query.code as string;
-    const { access_token } = await this.sdk.getCredentials(code);
+
+  async getIdentity(credentials: Credentials): Promise<User> {
+    const { access_token } = credentials;
     const { data: user, statusCode } = await this.sdk.query(
       'user',
       access_token,
     );
+
     if (!this.sdk.isSuccess<User>(user, statusCode)) {
-      return;
+      this.throw();
     }
     if (user.email == null) {
       const { data, statusCode } = await this.sdk.query(
@@ -52,14 +50,9 @@ export abstract class AbstractStrategy<K extends string = 'user', T = unknown>
           null;
       }
     }
-    this.setData(request, user);
+    return user;
   }
-  getData(request: Request): T | undefined {
-    return (request as any)[this.key];
-  }
-  setData<R>(request: Request, data: T | R): void {
-    (request as any)[this.key] = data;
-    return;
-  }
-  abstract validate(request: Request): boolean;
+
+  abstract transform(identity: User): T;
+  abstract validate(identity: T, credentials: Credentials): boolean;
 }

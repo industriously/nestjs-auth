@@ -48,7 +48,7 @@ export const GithubSDK: SDK<Oauth2Options, Credentials, Target> = (options) => {
         { Accept: 'application/json' },
       );
       if (!this.isSuccess<Tokens>(data, statusCode)) {
-        throw new Error('Can not get credentials');
+        return null;
       }
       const {
         access_token,
@@ -73,8 +73,7 @@ export const GithubSDK: SDK<Oauth2Options, Credentials, Target> = (options) => {
       };
       return fetcher.get(uri_mapper[target], headers);
     },
-    isSuccess<T>(_: unknown, statusCode: number): _ is T {
-      // OK || Not Modified
+    isSuccess<T>(data: unknown, statusCode: number): data is T {
       return statusCode === 200 || statusCode === 304;
     },
   };

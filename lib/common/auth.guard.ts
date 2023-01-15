@@ -5,17 +5,22 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-
 import type { Strategy, Request, Response } from './common.interface';
 
-export abstract class AbstractAuthGuard<T = unknown> implements CanActivate {
-  constructor(protected readonly strategy: Strategy<T>) {}
+export abstract class AbstractAuthGuard implements CanActivate {
+  constructor(protected readonly strategy: Strategy) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
-    if (this.strategy.isOauthCallback(request)) {
-      await this.strategy.authorize(request);
-      return this.strategy.validate(request);
+    if (this.strategy.isRedirectURL(request.path)) {
+      const credentials = await this.strategy.authorize(
+        this.strategy.getCode(request),
+      );
+      const identity = this.strategy.transform(
+        await this.strategy.getIdentity(credentials),
+      );
+      this.strategy.saveIdentity(request, identity);
+      return this.strategy.validate(identity, credentials);
     } else {
       const handler = context.getHandler();
       handler.apply = () => response.redirect(this.strategy.OAUTH2_URI);
@@ -24,11 +29,9 @@ export abstract class AbstractAuthGuard<T = unknown> implements CanActivate {
   }
 }
 
-export const AuthGuard = <S, T = unknown>(
-  token: S,
-): Type<AbstractAuthGuard<T>> => {
-  class MixinGuard extends AbstractAuthGuard<T> {
-    constructor(@Inject(token) strategy: Strategy<T>) {
+export const AuthGuard = <S>(token: S): Type<AbstractAuthGuard> => {
+  class MixinGuard extends AbstractAuthGuard {
+    constructor(@Inject(token) strategy: Strategy) {
       super(strategy);
     }
   }

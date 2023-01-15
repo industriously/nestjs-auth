@@ -44,7 +44,7 @@ export const GoogleSDK: SDK<Oauth2Options, Credentials, string> = (options) => {
         },
       );
       if (!this.isSuccess<GoogleCredentials>(data, statusCode)) {
-        throw new Error('Can not get credentials');
+        return null;
       }
       const { access_token, expires_in, refresh_token, id_token, token_type } =
         data;
