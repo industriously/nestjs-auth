@@ -1,5 +1,5 @@
 import queryString from 'querystring';
-import type { Github } from './github.interface';
+import type { Oauth2Options, Target } from './github.interface';
 import type { Credentials, SDK } from '@COMMON/common.interface';
 import { fetcher } from '@LIB/utils';
 
@@ -18,16 +18,12 @@ interface Tokens {
   refresh_token_expires_in?: number;
 }
 
-const uri_mapper: Record<Github.Target, string> = {
+const uri_mapper: Record<Target, string> = {
   user: API_BASE + API_USER_PATH,
   user_emails: API_BASE + API_USER_EMAILS_PATH,
 };
 
-export const GithubSDK: SDK<
-  Github.Oauth2Options,
-  Credentials,
-  Github.Target
-> = (options) => {
+export const GithubSDK: SDK<Oauth2Options, Credentials, Target> = (options) => {
   const {
     client_id,
     client_secret,
@@ -69,7 +65,7 @@ export const GithubSDK: SDK<
         refresh_token_expires_in,
       };
     },
-    query(target: Github.Target, token: string) {
+    query(target: Target, token: string) {
       const headers = {
         Authorization: 'Bearer ' + token,
         Accept: 'application/vnd.github+json',

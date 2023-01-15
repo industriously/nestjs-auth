@@ -6,7 +6,13 @@ import type {
   Credentials,
   SDK,
 } from '@COMMON/common.interface';
-import type { Github } from './github.interface';
+import type {
+  Email,
+  Oauth2Options,
+  StrategyOptions,
+  Target,
+  User,
+} from './github.interface';
 
 export abstract class AbstractGithubStrategy<
   K extends string = 'user',
@@ -16,10 +22,8 @@ export abstract class AbstractGithubStrategy<
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;
   private readonly key: NotRequestKey<K>;
-  private readonly sdk: ReturnType<
-    SDK<Github.Oauth2Options, Credentials, Github.Target>
-  >;
-  constructor(options: Github.StrategyOptions<K>) {
+  private readonly sdk: ReturnType<SDK<Oauth2Options, Credentials, Target>>;
+  constructor(options: StrategyOptions<K>) {
     const { redirect_uri, key } = options;
     this.redirect_uri = redirect_uri;
     this.key = key;
@@ -36,7 +40,7 @@ export abstract class AbstractGithubStrategy<
       'user',
       access_token,
     );
-    if (!this.sdk.isSuccess<Github.User>(user, statusCode)) {
+    if (!this.sdk.isSuccess<User>(user, statusCode)) {
       return;
     }
     if (user.email == null) {
@@ -44,7 +48,7 @@ export abstract class AbstractGithubStrategy<
         'user_emails',
         access_token,
       );
-      if (this.sdk.isSuccess<Github.Email[]>(data, statusCode)) {
+      if (this.sdk.isSuccess<Email[]>(data, statusCode)) {
         user.email =
           data.find(({ primary, verified }) => primary && verified)?.email ??
           null;
