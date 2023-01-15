@@ -32,13 +32,7 @@ npm i @devts/nestjs-auth
 
 ```typescript
 import { ConfigService } from '@nestjs/config';
-import { AbstractGoogleStrategy } from '@devts/nestjs-auth';
-import type { Request } from 'express';
-
-interface GoogleIdTokenData {
-  name: string;
-  email: string;
-}
+import { Google } from '@devts/nestjs-auth';
 
 interface GoogleProfile {
   username: string;
@@ -47,8 +41,9 @@ interface GoogleProfile {
 
 @Injectable()
 export class GoogleStrategy extends AbstractGoogleStrategy<
-  'user', // this is key that assign token data in Request object. If you write a key that already used, key type in options is never
-  GoogleIdTokenData
+  'user',
+  "emails" | "profile"
+  GoogleProfile
 > {
   constructor(configService: ConfigService) {
     super({
@@ -59,13 +54,17 @@ export class GoogleStrategy extends AbstractGoogleStrategy<
       key: 'user',
     });
   }
-  validate(request: Request): boolean {
-    const data = this.getData(request); // type is GoogleIdTokenData | undefined
-    if (data == undefined) {
-      return false;
-    }
-    // other validate logic
-    this.setData<GoogleProfile>(request, { username: name, email }); // use if you want to transform data
+  transform(
+    identity: Google.IdToken<'email' | 'profile'>,
+  ): GoogleProfile {
+    const { name, email } = identity;
+    return { username: name, emails };
+  }
+
+  validate(
+    identity: GoogleProfile,
+    credentials: Google.Credentials,
+  ): boolean {
     return true;
   }
 }
