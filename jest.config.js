@@ -12,7 +12,8 @@ module.exports = {
   moduleNameMapper: {
     '^lib/(.*)$': '<rootDir>/lib/$1',
     '@LIB/(.*)$': '<rootDir>/lib/$1',
-    '@COMMON/(.*)$': '<rootDir>/lib/common/$1',
+    '@COMMON$': '<rootDir>/lib/common',
+    '@UTILS$': '<rootDir>/lib/utils',
   },
   collectCoverageFrom: ['lib/**/*.(t|j)s'],
   coveragePathIgnorePatterns: ['lib/index.ts'],

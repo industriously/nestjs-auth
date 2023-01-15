@@ -5,7 +5,7 @@ import type {
   Strategy,
   Credentials,
   SDK,
-} from '@COMMON/common.interface';
+} from '@COMMON';
 import type {
   Email,
   Oauth2Options,
@@ -14,10 +14,8 @@ import type {
   User,
 } from './github.interface';
 
-export abstract class AbstractGithubStrategy<
-  K extends string = 'user',
-  T = unknown,
-> implements Strategy<T>
+export abstract class AbstractStrategy<K extends string = 'user', T = unknown>
+  implements Strategy<T>
 {
   readonly OAUTH2_URI: string;
   readonly redirect_uri: string;

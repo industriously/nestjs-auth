@@ -1,4 +1,4 @@
-import type { NotRequestKey } from '@COMMON/common.interface';
+import type { NotRequestKey } from '@COMMON';
 
 export interface Oauth2Options {
   readonly client_id: string;

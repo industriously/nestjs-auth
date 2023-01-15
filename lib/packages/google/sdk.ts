@@ -1,7 +1,7 @@
 import queryString from 'querystring';
-import type { SDK } from '@COMMON/common.interface';
-import type { Google } from './google.interface';
 import { fetcher } from '@LIB/utils';
+import type { SDK } from '@COMMON';
+import type { Credentials, Oauth2Options } from './google.interface';
 
 const OAUTH2_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const TOKENS_URL = 'https://oauth2.googleapis.com/token';
@@ -14,13 +14,9 @@ interface GoogleCredentials {
   scope: string;
   token_type: 'Bearer';
 }
-export const GoogleSDK: SDK<Google.Oauth2Options, Google.Tokens, string> = (
-  options,
-) => {
+export const GoogleSDK: SDK<Oauth2Options, Credentials, string> = (options) => {
   const { client_id, client_secret, redirect_uri, scope } = options;
-  const scope_string = scope.some((val) => val === 'openid')
-    ? scope.join(' ')
-    : scope.join(' ') + ' openid';
+  const scope_string = scope.join(' ') + ' openid';
   return {
     oauth_uri:
       OAUTH2_URL +

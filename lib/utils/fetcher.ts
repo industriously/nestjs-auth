@@ -1,6 +1,6 @@
-import { FetcherResponse } from '@COMMON/common.interface';
-import { IncomingMessage } from 'http';
 import http from 'https';
+import type { FetcherResponse } from '@COMMON';
+import type { IncomingMessage } from 'http';
 
 const request =
   (

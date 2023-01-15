@@ -1,7 +1,7 @@
 import queryString from 'querystring';
+import { fetcher } from '@UTILS';
 import type { Oauth2Options, Target } from './github.interface';
-import type { Credentials, SDK } from '@COMMON/common.interface';
-import { fetcher } from '@LIB/utils';
+import type { Credentials, SDK } from '@COMMON';
 
 const OAUTH2_URL = 'https://github.com/login/oauth/authorize';
 const ACCESS_TOKEN_URL = 'https://github.com/login/oauth/access_token';
