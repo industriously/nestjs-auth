@@ -1,18 +1,13 @@
-import type { NotRequestKey } from './common.interface';
+import type { NotRequestKey } from '@COMMON';
 
-export interface GithubOauth2Options {
+export interface Oauth2Options {
   readonly client_id: string;
   readonly client_secret: string;
   readonly redirect_uri: string;
-  readonly scope: GithubScope[];
+  readonly scope: Scope[];
   readonly allow_signup?: boolean;
 }
-
-export interface GithubStrategyOptions<T = 'user'> extends GithubOauth2Options {
-  readonly key: NotRequestKey<T>;
-}
-
-export type GithubScope =
+export type Scope =
   | 'repo'
   | 'repo:status'
   | 'repo_deployment'
@@ -49,7 +44,12 @@ export type GithubScope =
   | 'codespace'
   | 'workflow';
 
-interface GithubPublicUser {
+export interface StrategyOptions<T extends string = 'user'>
+  extends Oauth2Options {
+  readonly key: NotRequestKey<T>;
+}
+
+interface PublicUser {
   login: string;
   id: number;
   node_id: string;
@@ -82,21 +82,22 @@ interface GithubPublicUser {
   following: number;
   created_at: string;
   updated_at: string;
+  plan?: {
+    collaborators: number;
+    name: string;
+    space: number;
+    private_repos: number;
+    [k: string]: unknown;
+  };
+  suspended_at?: string | null;
   private_gists?: number;
   total_private_repos?: number;
   owned_private_repos?: number;
   disk_usage?: number;
   collaborators?: number;
-  plain?: {
-    name: string;
-    space: number;
-    collaborators: number;
-    private_repos: number;
-  };
-  suspended_at?: string | null;
 }
 
-interface GithubPrivateUser extends GithubPublicUser {
+interface PrivateUser extends PublicUser {
   private_gists: number;
   total_private_repos: number;
   owned_private_repos: number;
@@ -105,13 +106,16 @@ interface GithubPrivateUser extends GithubPublicUser {
   two_factor_authentication: boolean;
   business_plus?: boolean;
   ldap_dn?: string;
+  [k: string]: unknown;
 }
+export type User = PublicUser | PrivateUser;
 
-export type GithubUser = GithubPublicUser | GithubPrivateUser;
-
-export interface GIthubEmail {
+export interface Email {
   email: string;
   primary: boolean;
   verified: boolean;
   visibility: 'public' | 'private' | null;
+  [k: string]: unknown;
 }
+
+export type Target = 'user' | 'user_emails';

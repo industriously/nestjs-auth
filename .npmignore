@@ -7,6 +7,11 @@
 coverage/**/*
 coverage/*
 
+coverage-ts/**/*
+coverage-ts/*
+
+type-coverage.txt
+
 .env
 .env.*
 

@@ -2,7 +2,24 @@ name: Test Coverage Comment
 on: pull_request
     
 jobs:
-  coverage_comment:
+  type_comment:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - uses: actions/checkout@v3
+
+      - name: Install
+        run: npm ci
+
+      - name: Type Report
+        run: npm run type-coverage > type-coverage.txt
+
+      - name: Type Comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: ./type-coverage.txt
+
+  test_comment:
     runs-on: ubuntu-latest
     
     steps:
@@ -11,11 +28,10 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Test
+      - name: Test Report
         run: npx jest --coverage --coverageReporters json-summary
 
-
-      - name: Comment
+      - name: Test Comment
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:

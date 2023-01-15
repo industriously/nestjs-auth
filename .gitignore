@@ -3,6 +3,9 @@ dist
 
 coverage
 
+coverage-ts
+type-coverage.txt
+
 .DS_Store
 
 .env
