@@ -37,7 +37,7 @@ export const fetcher = {
    * @param uri API uri
    * @param headers custom http header in request
    * @returns api response data and status
-   * @throws network error or JSON parsing error
+   * @throws network error, stream 'error' events.
    */
   get(uri: string, headers: NonNullable<http.RequestOptions['headers']> = {}) {
     return new Promise<FetcherResponse>((resolve, reject) => {
@@ -59,7 +59,7 @@ export const fetcher = {
    * @param body a data that client send to server
    * @param headers custom http header in request
    * @returns api response data and status
-   * @throws network error or JSON parsing error
+   * @throws network error, stream 'error' events.
    */
   post(
     uri: string,

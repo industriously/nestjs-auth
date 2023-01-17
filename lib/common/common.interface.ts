@@ -14,6 +14,9 @@ export type Request = Express.Request<
 
 export type Response = Express.Response<object, Record<string, unknown>>;
 
+/**
+ * Strategy is injected in AuthGuard
+ */
 export interface Strategy<
   T = unknown,
   R = T,
@@ -47,7 +50,7 @@ export interface Strategy<
   readonly authorize: (code: string) => Promise<C>;
   /**
    * get user's identity data
-   * @param credentials the object have access_token, refresh_token...
+   * @param credentials the object include access_token, refresh_token...
    * @returns user identity obtained from oauth system using credentials
    */
   readonly getIdentity: (credentials: C) => Promise<T>;
@@ -55,20 +58,20 @@ export interface Strategy<
    * save identity object
    * @param request user's http context request
    * @param identity transfromed identity
-   * @returns
+   * @returns none
    */
   readonly saveIdentity: (request: Request, identity: R) => void;
   /**
    * transform user identity object
    * @param identity old identity object
-   * @returns transformed identity object
+   * @returns transformed identity object, request[key] refers to it.
    */
   readonly transform: (identity: T) => R;
   /**
    * validate user's identity is correct.
    * If you want to throw custom exception, you should throw your custom exception in this method.
    * @param identity user's transformed identity object
-   * @param credentials user's tokens like access_token
+   * @param credentials user's tokens that include access_token
    * @returns true if identity are correct
    */
   readonly validate: (identity: R, credentials: C) => boolean;
@@ -78,13 +81,7 @@ export interface Credentials {
   readonly token_type: string;
   readonly access_token: string;
   readonly refresh_token?: string;
-  /**
-   * numeric string (sec)
-   */
   readonly access_token_expires_in?: number;
-  /**
-   * numeric string (sec)
-   */
   readonly refresh_token_expires_in?: number;
 }
 
@@ -100,7 +97,18 @@ export type SDK<
   T extends string = string,
 > = (options: O) => {
   readonly oauth_uri: string;
+  /**
+   * get user's Credentials, including access_token.
+   * @param code user's identity code
+   * @returns Credentials, If successfully get it.
+   */
   readonly getCredentials: (code: string) => Promise<C | null>;
+  /**
+   * request API to external server
+   * @param target target is mapped to api path.
+   * @param token user's access_token
+   * @returns API response, including data and statusCode.
+   */
   readonly query: (target: T, token: string) => Promise<FetcherResponse>;
   readonly isSuccess: <D>(data: unknown, statusCode: number) => data is D;
 };

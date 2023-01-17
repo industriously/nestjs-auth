@@ -6,6 +6,9 @@ import {
   Strategy,
 } from './common.interface';
 
+/**
+ * This abstract class is implement general methods.
+ */
 export abstract class BaseAbstractStrategy<
   K extends string,
   T = unknown,

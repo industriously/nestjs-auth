@@ -1,4 +1,4 @@
-name: Test Coverage Comment
+name: Coverage Comment
 on: pull_request
     
 jobs:
@@ -14,11 +14,23 @@ jobs:
       - name: Type Report
         run: npm run type-coverage > type-coverage.txt
 
-      - name: Type Comment
-        uses: thollander/actions-comment-pull-request@v2
+      - name: Type Comment Finding
+        if: ${{ github.event.action == 'synchronize' }}
+        uses: peter-evans/find-comment@v2
+        id: fc
         with:
-          filePath: ./type-coverage.txt
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: type-coverage
 
+      - name: Type Comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: ./type-coverage.txt
+          edit-mode: replace
+        
   test_comment:
     runs-on: ubuntu-latest
     

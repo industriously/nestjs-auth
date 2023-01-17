@@ -15,7 +15,15 @@ interface GoogleCredentials {
   token_type: 'Bearer';
 }
 export const GoogleSDK: SDK<Oauth2Options, Credentials, string> = (options) => {
-  const { client_id, client_secret, redirect_uri, scope } = options;
+  const {
+    client_id,
+    client_secret,
+    redirect_uri,
+    scope,
+    access_type = 'online',
+    include_granted_scopes = true,
+    prompt,
+  } = options;
   const scope_string = scope.join(' ') + ' openid';
   return {
     oauth_uri:
@@ -26,7 +34,9 @@ export const GoogleSDK: SDK<Oauth2Options, Credentials, string> = (options) => {
         redirect_uri,
         scope: scope_string,
         response_type: 'code',
-        access_type: 'offline',
+        access_type,
+        include_granted_scopes,
+        ...(prompt ? { prompt } : {}),
       }),
     async getCredentials(code) {
       const body = {

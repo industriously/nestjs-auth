@@ -13,9 +13,9 @@ interface Tokens {
   access_token: string;
   token_type: string;
   scope: string;
-  expires_in?: number;
+  expires_in?: string;
   refresh_token?: string;
-  refresh_token_expires_in?: number;
+  refresh_token_expires_in?: string;
 }
 
 const uri_mapper: Record<Target, string> = {
@@ -55,12 +55,18 @@ export const GithubSDK: SDK<Oauth2Options, Credentials, Target> = (options) => {
         expires_in,
         token_type,
         refresh_token,
-        refresh_token_expires_in,
+        refresh_token_expires_in: refresh_expires_in,
       } = data;
+      const access_token_expires_in = expires_in
+        ? Number(expires_in)
+        : undefined;
+      const refresh_token_expires_in = refresh_expires_in
+        ? Number(refresh_expires_in)
+        : undefined;
       return {
         token_type,
         access_token,
-        access_token_expires_in: expires_in,
+        access_token_expires_in,
         refresh_token,
         refresh_token_expires_in,
       };
