@@ -46,9 +46,15 @@ export type Scope =
 
 export interface StrategyOptions<T extends string = 'user'>
   extends Oauth2Options {
+  /**
+   * request[key] refers to identity object.
+   */
   readonly key: NotRequestKey<T>;
 }
 
+/**
+ * If options's scope don't include 'user' or 'read:user', you will get PublicUser.
+ */
 interface PublicUser {
   login: string;
   id: number;
@@ -96,7 +102,9 @@ interface PublicUser {
   disk_usage?: number;
   collaborators?: number;
 }
-
+/**
+ * If option's scope include 'user' or 'read:user', you will get PrivateUser.
+ */
 interface PrivateUser extends PublicUser {
   private_gists: number;
   total_private_repos: number;
@@ -108,6 +116,7 @@ interface PrivateUser extends PublicUser {
   ldap_dn?: string;
   [k: string]: unknown;
 }
+
 export type User = PublicUser | PrivateUser;
 
 export interface Email {
@@ -117,5 +126,7 @@ export interface Email {
   visibility: 'public' | 'private' | null;
   [k: string]: unknown;
 }
-
+/**
+ * this type is used sdk.query's target parameter type.
+ */
 export type Target = 'user' | 'user_emails';

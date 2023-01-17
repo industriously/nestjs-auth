@@ -7,6 +7,10 @@ import {
 } from '@nestjs/common';
 import type { Strategy, Request, Response } from './common.interface';
 
+/**
+ * If you want to create custom Guard, extend AbstractAuthGuard.
+ * you have to give constructor parameter that implement Strategy interface
+ */
 export abstract class AbstractAuthGuard implements CanActivate {
   constructor(protected readonly strategy: Strategy) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -28,7 +32,11 @@ export abstract class AbstractAuthGuard implements CanActivate {
     }
   }
 }
-
+/**
+ * @param token this is a marking as a target for Dependency Injection (DI).
+ * In nestjs module, you have to provide this token with Strategy
+ * @returns MixInGuard extends AbstractAuthGuard
+ */
 export const AuthGuard = <S>(token: S): Type<AbstractAuthGuard> => {
   class MixinGuard extends AbstractAuthGuard {
     constructor(@Inject(token) strategy: Strategy) {
