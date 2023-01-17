@@ -9,7 +9,8 @@ import type { Strategy, Request, Response } from './common.interface';
 
 /**
  * If you want to create custom Guard, extend AbstractAuthGuard.
- * you have to give constructor parameter that implement Strategy interface
+ * the Strategy will be injected by nestjs module
+ * you have to add @Injectable decorator on AuthGuard extends AbstractAuthGuard
  */
 export abstract class AbstractAuthGuard implements CanActivate {
   constructor(protected readonly strategy: Strategy) {}

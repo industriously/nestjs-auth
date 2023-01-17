@@ -15,7 +15,7 @@ export type Request = Express.Request<
 export type Response = Express.Response<object, Record<string, unknown>>;
 
 /**
- * Strategy interface will given from constructor parameter in AuthGuard
+ * Strategy is injected in AuthGuard
  */
 export interface Strategy<
   T = unknown,
