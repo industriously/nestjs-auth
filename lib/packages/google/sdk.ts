@@ -22,6 +22,7 @@ export const GoogleSDK: SDK<Oauth2Options, Credentials, string> = (options) => {
     scope,
     access_type = 'online',
     include_granted_scopes = true,
+    prompt,
   } = options;
   const scope_string = scope.join(' ') + ' openid';
   return {
@@ -35,6 +36,7 @@ export const GoogleSDK: SDK<Oauth2Options, Credentials, string> = (options) => {
         response_type: 'code',
         access_type,
         include_granted_scopes,
+        ...(prompt ? { prompt } : {}),
       }),
     async getCredentials(code) {
       const body = {

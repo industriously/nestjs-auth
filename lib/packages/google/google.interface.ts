@@ -5,10 +5,26 @@ export interface Oauth2Options {
   readonly client_secret: string;
   readonly redirect_uri: string;
   readonly scope: string[];
-  // 'online' (default) or 'offline' (gets refresh_token)
+  /**
+   * 'online' (default) or 'offline' (gets refresh_token)
+   */
   readonly access_type?: 'online' | 'offline';
-  // Enable incremental authorization. Recommended as a best practice.
+  /**
+   * Enable incremental authorization. Recommended as a best practice.
+   */
   readonly include_granted_scopes?: boolean;
+  /**
+   * A space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. The possible values are:
+   *
+   * consent
+   * The authorization server prompts the user for consent before returning information to the client.
+   *
+   * select_account
+   * The authorization server prompts the user to select a user account. This allows a user who has multiple accounts at the authorization server to select amongst the multiple accounts that they may have current sessions for.
+   *
+   * If no value is specified and the user has not previously authorized access, then the user is shown a consent screen.
+   */
+  readonly prompt?: 'consent' | 'select_account';
 }
 export interface StrategyOptions<T extends string = 'user'>
   extends Oauth2Options {
