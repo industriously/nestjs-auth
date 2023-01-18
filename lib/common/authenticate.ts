@@ -28,6 +28,6 @@ export const authenticate =
     }
     return {
       type: 'OAUTH2',
-      redirect_url: strategy.redirect_uri,
+      redirect_url: strategy.OAUTH2_URI,
     };
   };
