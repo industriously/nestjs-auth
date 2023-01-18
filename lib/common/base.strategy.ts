@@ -2,8 +2,8 @@ import { AuthException } from './auth-exception';
 import {
   Credentials,
   NotRequestKey,
-  Request,
   Strategy,
+  Request,
 } from './common.interface';
 
 /**

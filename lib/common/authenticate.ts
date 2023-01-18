@@ -1,4 +1,4 @@
-import type { Request, Strategy } from '@COMMON';
+import type { Strategy, Request } from '@COMMON';
 
 interface OAUTH2 {
   type: 'OAUTH2';

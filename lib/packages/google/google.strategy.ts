@@ -1,4 +1,4 @@
-import { decode_jwt } from '@LIB/utils';
+import { decode_jwt } from '@UTILS';
 import { GoogleSDK } from './sdk';
 import { BaseAbstractStrategy, NotRequestKey, SDK } from '@COMMON';
 import type {

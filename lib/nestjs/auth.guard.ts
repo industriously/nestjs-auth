@@ -5,7 +5,7 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-import { Strategy, Request, Response, authenticate } from '@COMMON';
+import { Strategy, authenticate, Request, Response } from '@COMMON';
 
 /**
  * If you want to create custom Guard, extend AbstractAuthGuard.
