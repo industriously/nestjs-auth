@@ -32,8 +32,9 @@ npm i @devts/nestjs-auth
 ## Example
 
 ```typescript
+import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Google } from '@devts/nestjs-auth';
+import { Google, StrategyException } from '@devts/nestjs-auth';
 
 interface GoogleProfile {
   username: string;
@@ -51,10 +52,20 @@ export class GoogleStrategy extends AbstractGoogleStrategy<
       client_id: configService.get('CLIENT_ID'),
       client_secret: configService.get('CLIENT_SECRET'),
       redirect_uri: configService.get('OAUTH_CALLBACK'),
+      access_type: "offline",
+      prompt: "consent",
       scope: ['email', 'profile'],
       key: 'user',
     });
   }
+
+  protected throw({
+    statusCode = 401,
+    message = ''
+  }:StrategyException): never {
+    throw new HttpException(statusCode, message);
+  }
+
   transform(
     identity: Google.IdToken<'email' | 'profile'>,
   ): GoogleProfile {

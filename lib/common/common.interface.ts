@@ -123,3 +123,8 @@ export interface FetcherResponse<T = unknown> {
    */
   data: T;
 }
+
+export interface StrategyException {
+  statusCode?: number;
+  message?: string;
+}

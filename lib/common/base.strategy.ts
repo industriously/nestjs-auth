@@ -4,6 +4,7 @@ import {
   NotRequestKey,
   Strategy,
   Request,
+  StrategyException,
 } from './common.interface';
 
 /**
@@ -22,10 +23,7 @@ export abstract class BaseAbstractStrategy<
   protected throw({
     statusCode = 401,
     message = '',
-  }: {
-    statusCode?: number;
-    message?: string;
-  }): never {
+  }: StrategyException): never {
     throw new AuthException(statusCode, message);
   }
 
