@@ -1,4 +1,4 @@
-import { ForbiddenException } from '@nestjs/common';
+import { AuthException } from './auth-exception';
 import {
   Credentials,
   NotRequestKey,
@@ -19,13 +19,20 @@ export abstract class BaseAbstractStrategy<
   /**
    * this method will be called when strategy have exception.
    */
-  protected throw(): never {
-    throw new ForbiddenException();
+  protected throw({
+    statusCode = 401,
+    message = '',
+  }: {
+    statusCode?: number;
+    message?: string;
+  }): never {
+    throw new AuthException(statusCode, message);
   }
+
   getCode(request: Request) {
     const code = request.query.code;
     if (typeof code !== 'string') {
-      this.throw();
+      this.throw({ message: 'Fail to authenticate' });
     }
     return code;
   }

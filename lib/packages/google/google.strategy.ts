@@ -27,14 +27,16 @@ export abstract class AbstractStrategy<
 
   async authorize(code: string): Promise<Credentials> {
     const credentials = await this.sdk.getCredentials(code);
-    return credentials ? credentials : this.throw();
+    return credentials
+      ? credentials
+      : this.throw({ message: 'Fail to access User Credentials.' });
   }
 
   async getIdentity(credentials: Credentials): Promise<IdToken<Scope>> {
     const { id_token } = credentials;
     const data = decode_jwt<IdToken<Scope>>(id_token);
     if (data == null) {
-      this.throw();
+      this.throw({ statusCode: 401, message: 'Fail to access User Identity.' });
     }
     return data;
   }
