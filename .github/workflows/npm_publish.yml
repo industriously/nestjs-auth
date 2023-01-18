@@ -1,0 +1,27 @@
+name: package publish
+
+on:
+  push:
+    tags: 
+      - v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+    
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Clear cache
+        run: curl -X PURGE https://camo.githubusercontent.com/e267485242dc0473e5176648edb3c22a93f404541c7456279d5f8ca34b9bafa9/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f762f4064657674732532466e6573746a732d617574682e737667
