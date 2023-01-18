@@ -5,7 +5,7 @@ import {
   mixin,
   Type,
 } from '@nestjs/common';
-import type { Strategy, Request, Response } from './common.interface';
+import { Strategy, Request, Response, authenticate } from '@COMMON';
 
 /**
  * If you want to create custom Guard, extend AbstractAuthGuard.
@@ -17,20 +17,14 @@ export abstract class AbstractAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
-    if (this.strategy.isRedirectURL(request.path)) {
-      const credentials = await this.strategy.authorize(
-        this.strategy.getCode(request),
-      );
-      const identity = this.strategy.transform(
-        await this.strategy.getIdentity(credentials),
-      );
-      this.strategy.saveIdentity(request, identity);
-      return this.strategy.validate(identity, credentials);
-    } else {
+
+    const result = await authenticate(this.strategy)(request);
+    if (result.type === 'OAUTH2') {
       const handler = context.getHandler();
-      handler.apply = () => response.redirect(this.strategy.OAUTH2_URI);
+      handler.apply = () => response.redirect(result.redirect_url);
       return true;
     }
+    return result.isSuccess;
   }
 }
 /**
