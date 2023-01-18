@@ -26,7 +26,9 @@ export abstract class AbstractStrategy<
 
   async authorize(code: string): Promise<Credentials> {
     const credentials = await this.sdk.getCredentials(code);
-    return credentials ? credentials : this.throw();
+    return credentials
+      ? credentials
+      : this.throw({ message: 'Fail to access User Credentials.' });
   }
 
   async getIdentity(credentials: Credentials): Promise<User> {
@@ -37,7 +39,7 @@ export abstract class AbstractStrategy<
     );
 
     if (!this.sdk.isSuccess<User>(user, statusCode)) {
-      this.throw();
+      this.throw({ statusCode, message: 'Fail to access User Identity.' });
     }
     if (user.email == null) {
       const { data, statusCode } = await this.sdk.query(
