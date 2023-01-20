@@ -17,19 +17,11 @@ export type Response = Express.Response<object, Record<string, unknown>>;
 /**
  * Strategy is injected in AuthGuard
  */
-export interface Strategy<
-  T = unknown,
-  R = T,
-  C extends Credentials = Credentials,
-> {
+export interface Strategy<T = unknown, R = T, C = Credentials> {
   /**
    * oauth system authenticate uri
    */
   readonly OAUTH2_URI: string;
-  /**
-   * oauth callback uri, oauth system will redirect this uri with code
-   */
-  readonly redirect_uri: string;
   /**
    * check current path is redirect url
    * @param uri current path that user request

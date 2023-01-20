@@ -1,5 +1,5 @@
 import { GithubSDK } from './sdk';
-import { NotRequestKey, Credentials, SDK, BaseAbstractStrategy } from '@COMMON';
+import { Credentials, SDK, BaseAbstractStrategy } from '@COMMON';
 import type {
   Email,
   Oauth2Options,
@@ -12,14 +12,10 @@ export abstract class AbstractStrategy<
   K extends string = 'user',
   T = User,
 > extends BaseAbstractStrategy<K, User, T, Credentials> {
-  readonly OAUTH2_URI: string;
-  readonly redirect_uri: string;
-  protected readonly key: NotRequestKey<K>;
+  public readonly OAUTH2_URI: string;
   private readonly sdk: ReturnType<SDK<Oauth2Options, Credentials, Target>>;
   constructor(options: StrategyOptions<K>) {
-    super();
-    this.key = options.key;
-    this.redirect_uri = options.redirect_uri;
+    super(options.key, options.redirect_uri);
     this.sdk = GithubSDK(options);
     this.OAUTH2_URI = this.sdk.oauth_uri;
   }

@@ -1,6 +1,6 @@
 import { decode_jwt } from '@UTILS';
 import { GoogleSDK } from './sdk';
-import { BaseAbstractStrategy, NotRequestKey, SDK } from '@COMMON';
+import { BaseAbstractStrategy, SDK } from '@COMMON';
 import type {
   Credentials,
   IdToken,
@@ -13,14 +13,10 @@ export abstract class AbstractStrategy<
   Scope extends '' | 'email' | 'profile' = '',
   T = IdToken<Scope>,
 > extends BaseAbstractStrategy<K, IdToken<Scope>, T, Credentials> {
-  readonly OAUTH2_URI: string;
-  readonly redirect_uri: string;
-  protected readonly key: NotRequestKey<K>;
+  public readonly OAUTH2_URI: string;
   private readonly sdk: ReturnType<SDK<Oauth2Options, Credentials>>;
   constructor(options: StrategyOptions<K>) {
-    super();
-    this.key = options.key;
-    this.redirect_uri = options.redirect_uri;
+    super(options.key, options.redirect_uri);
     this.sdk = GoogleSDK(options);
     this.OAUTH2_URI = this.sdk.oauth_uri;
   }

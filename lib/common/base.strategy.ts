@@ -14,9 +14,16 @@ export abstract class BaseAbstractStrategy<
   K extends string,
   T = unknown,
   R = T,
-  C extends Credentials = Credentials,
+  C = Credentials,
 > implements Strategy<T, R, C>
 {
+  constructor(
+    private readonly key: NotRequestKey<K>,
+    /**
+     * oauth callback uri, oauth system will redirect this uri with code
+     */
+    private readonly redirect_uri: string,
+  ) {}
   /**
    * this method will be called when strategy have exception.
    */
@@ -41,9 +48,7 @@ export abstract class BaseAbstractStrategy<
     (request as any)[this.key] = identity;
     return;
   }
-  protected abstract key: NotRequestKey<K>;
-  abstract OAUTH2_URI: string;
-  abstract redirect_uri: string;
+  abstract readonly OAUTH2_URI: string;
   abstract authorize(code: string): Promise<C>;
   abstract getIdentity(credentials: C): Promise<T>;
   abstract transform(identity: T): R;
