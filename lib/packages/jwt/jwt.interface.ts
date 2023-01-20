@@ -7,19 +7,19 @@ export interface StrategyOptions<T extends string = 'user'> {
   /**
    * symmetric key or public key of asymmetric key
    */
-  secret: string | Buffer;
+  readonly secret: string | Buffer;
   /**
    * extract jwt from request, if a token not exist, return null.
    * @param req user's request context
    * @returns token or null
    */
-  jwtFromRequest: (req: Request) => string | null;
+  readonly jwtFromRequest: JwtFromRequestFunction;
   /**
    * jwt verify options
    */
-  verifyOptions: VerifyOptions;
+  readonly verifyOptions: Omit<VerifyOptions, 'complete'>;
   /**
    * request[key] refers to identity object.
    */
-  key: NotRequestKey<T>;
+  readonly key: NotRequestKey<T>;
 }
