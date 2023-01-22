@@ -12,17 +12,20 @@ export abstract class AbstractStrategy<
     super(options.key, '');
   }
   getCode(request: Request): string {
-    return (
-      this.options.jwtFromRequest(request) ??
-      this.throw({ message: 'Can not find jwt.' })
-    );
+    for (const extractor of this.options.jwtFromRequest) {
+      const jwt = extractor(request);
+      if (typeof jwt === 'string') {
+        return jwt;
+      }
+    }
+    this.throw({ message: 'Can not find jwt.' });
   }
   isRedirectURL(_: string): boolean {
     return true;
   }
   async authorize(token: string): Promise<T> {
     return verify(token, this.options.secret, {
-      ...this.options.verifyOptions,
+      ...(this.options.verifyOptions ? this.options.verifyOptions : {}),
       complete: false,
     }) as T;
   }

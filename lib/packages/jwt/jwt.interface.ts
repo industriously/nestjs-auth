@@ -13,11 +13,11 @@ export interface StrategyOptions<T extends string = 'user'> {
    * @param req user's request context
    * @returns token or null
    */
-  readonly jwtFromRequest: JwtFromRequestFunction;
+  readonly jwtFromRequest: readonly JwtFromRequestFunction[];
   /**
    * jwt verify options
    */
-  readonly verifyOptions: Omit<VerifyOptions, 'complete'>;
+  readonly verifyOptions?: Omit<VerifyOptions, 'complete'>;
   /**
    * request[key] refers to identity object.
    */
