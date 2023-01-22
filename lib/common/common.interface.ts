@@ -4,13 +4,16 @@ interface Query {
   [key: string]: string | string[] | Query | Query[];
 }
 
-export type Request = Express.Request<
-  { [key: string]: string },
-  object,
-  object,
-  Query,
-  Record<string, unknown>
->;
+export type Request = Omit<
+  Express.Request<
+    { [key: string]: string },
+    object,
+    object,
+    Query,
+    Record<string, unknown>
+  >,
+  'cookies'
+> & { cookies: unknown };
 
 export type Response = Express.Response<object, Record<string, unknown>>;
 
