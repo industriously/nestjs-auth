@@ -42,7 +42,7 @@ interface GoogleProfile {
 }
 
 @Injectable()
-export class GoogleStrategy extends AbstractGoogleStrategy<
+export class GoogleStrategy extends Google.AbstractStrategy<
   'user',
   "emails" | "profile"
   GoogleProfile
