@@ -4,7 +4,7 @@
   "description": "Oauth2 Auth Module to NestJS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "license": "ISC",
+  "license": "MIT",
   "scripts": {
     "type-coverage": "type-coverage --detail",
     "test": "jest",
