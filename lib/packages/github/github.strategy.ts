@@ -50,7 +50,4 @@ export abstract class AbstractStrategy<
     }
     return user;
   }
-
-  abstract transform(identity: User): T;
-  abstract validate(identity: T, credentials: Credentials): boolean;
 }

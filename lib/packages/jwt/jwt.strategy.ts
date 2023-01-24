@@ -32,6 +32,6 @@ export abstract class AbstractStrategy<
   async getIdentity(payload: T): Promise<T> {
     return payload;
   }
+  abstract validate(payload: T): boolean;
   abstract transform(payload: T): R;
-  abstract validate(payload: R): boolean;
 }

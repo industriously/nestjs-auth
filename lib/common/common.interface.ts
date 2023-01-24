@@ -50,14 +50,15 @@ export interface Strategy<T = unknown, R = T, C = Credentials> {
    */
   readonly getIdentity: (credentials: C) => Promise<T>;
   /**
-   * save identity object
+   * save transformed identity object
    * @param request user's http context request
    * @param identity transfromed identity
    * @returns none
    */
   readonly saveIdentity: (request: Request, identity: R) => void;
   /**
-   * transform user identity object
+   * transform user identity object.
+   * this method is called when validte method return true.
    * @param identity old identity object
    * @returns transformed identity object, request[key] refers to it.
    */
@@ -69,7 +70,7 @@ export interface Strategy<T = unknown, R = T, C = Credentials> {
    * @param credentials user's tokens that include access_token
    * @returns true if identity are correct
    */
-  readonly validate: (identity: R, credentials: C) => boolean;
+  readonly validate: (identity: T, credentials: C) => boolean;
 }
 
 export interface Credentials {

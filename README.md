@@ -66,18 +66,18 @@ export class GoogleStrategy extends Google.AbstractStrategy<
     throw new HttpException(statusCode, message);
   }
 
+  validate(
+    identity: Google.IdToken<'email' | 'profile'>,
+    credentials: Google.Credentials,
+  ): boolean {
+    return true;
+  }
+
   transform(
     identity: Google.IdToken<'email' | 'profile'>,
   ): GoogleProfile {
     const { name, email } = identity;
     return { username: name, emails };
-  }
-
-  validate(
-    identity: GoogleProfile,
-    credentials: Google.Credentials,
-  ): boolean {
-    return true;
   }
 }
 

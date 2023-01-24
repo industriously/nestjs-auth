@@ -17,14 +17,12 @@ export const authenticate =
   async (req: Request): Promise<AuthenticateReturn> => {
     if (strategy.isRedirectURL(req.path)) {
       const credentials = await strategy.authorize(strategy.getCode(req));
-      const identity = strategy.transform(
-        await strategy.getIdentity(credentials),
-      );
-      strategy.saveIdentity(req, identity);
-      return {
-        type: 'Callback',
-        isSuccess: strategy.validate(identity, credentials),
-      };
+      const identity = await strategy.getIdentity(credentials);
+      const isSuccess = strategy.validate(identity, credentials);
+      if (isSuccess) {
+        strategy.saveIdentity(req, strategy.transform(identity));
+      }
+      return { type: 'Callback', isSuccess };
     }
     return {
       type: 'OAUTH2',

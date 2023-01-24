@@ -51,6 +51,6 @@ export abstract class BaseAbstractStrategy<
   abstract readonly OAUTH2_URI: string;
   abstract authorize(code: string): Promise<C>;
   abstract getIdentity(credentials: C): Promise<T>;
+  abstract validate(identity: T, credentials: C): boolean;
   abstract transform(identity: T): R;
-  abstract validate(identity: R, credentials: C): boolean;
 }

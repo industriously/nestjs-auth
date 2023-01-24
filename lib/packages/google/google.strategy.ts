@@ -36,7 +36,4 @@ export abstract class AbstractStrategy<
     }
     return data;
   }
-
-  abstract transform(identity: IdToken<Scope>): T;
-  abstract validate(identity: T, credentials: Credentials): boolean;
 }
