@@ -27,14 +27,13 @@ export const Cookie =
 export const AuthorizationHeaderAsScheme =
   (scheme: string): JwtFromRequestFunction =>
   (req) => {
-    const scheme_lower = scheme.toLowerCase();
-    const headers = req.headers['authorization']?.split(' ');
-    if (headers && headers.length >= 2) {
-      if (headers[0] === scheme_lower) {
-        return headers[1];
-      }
+    const regex = new RegExp(`^${scheme}\\s+\\S+`, 'i');
+    const header = req.headers['authorization'];
+    if (header == null) {
+      return null;
     }
-    return null;
+    const token = header.match(regex);
+    return token ? token[0].split(/\s+/)[1] : null;
   };
 
 export const AuthorizationHeaderAsBearer: JwtFromRequestFunction =
