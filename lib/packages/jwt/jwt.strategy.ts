@@ -11,7 +11,7 @@ export abstract class AbstractStrategy<
   constructor(private readonly options: StrategyOptions<K>) {
     super(options.key, '');
   }
-  getCode(request: Request): string {
+  override getCode(request: Request): string {
     for (const extractor of this.options.jwtFromRequest) {
       const jwt = extractor(request);
       if (typeof jwt === 'string') {
@@ -20,7 +20,7 @@ export abstract class AbstractStrategy<
     }
     this.throw({ message: 'Can not find jwt.' });
   }
-  isRedirectURL(_: string): boolean {
+  override isRedirectURL(_: string): boolean {
     return true;
   }
   async authorize(token: string): Promise<T> {
@@ -32,6 +32,6 @@ export abstract class AbstractStrategy<
   async getIdentity(payload: T): Promise<T> {
     return payload;
   }
-  abstract validate(payload: T): boolean;
-  abstract transform(payload: T): R;
+  abstract override validate(payload: T): boolean;
+  abstract override transform(payload: T): R;
 }

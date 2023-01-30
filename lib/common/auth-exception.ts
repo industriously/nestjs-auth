@@ -1,5 +1,5 @@
 export class AuthException extends Error {
-  constructor(readonly statusCode: number, readonly message: string = '') {
+  constructor(readonly statusCode: number, message: string = '') {
     super(message);
   }
 }
