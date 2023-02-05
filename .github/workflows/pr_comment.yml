@@ -41,7 +41,7 @@ jobs:
         run: npm ci
 
       - name: Test Report
-        run: npx jest --coverage --coverageReporters json-summary
+        run: npm run test:cov -- --coverageReporters json-summary
 
       - name: Test Comment
         id: coverageComment
