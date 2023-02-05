@@ -21,7 +21,7 @@ export abstract class AbstractAuthGuard implements CanActivate {
     const result = await authenticate(this.strategy)(request);
     if (result.type === 'OAUTH2') {
       const handler = context.getHandler();
-      handler.apply = () => response.redirect(result.redirect_url);
+      handler.apply = () => response.redirect(308, result.redirect_url);
       return true;
     }
     return result.isSuccess;

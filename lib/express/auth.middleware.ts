@@ -12,7 +12,7 @@ export const AuthMiddleware =
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await authenticate(strategy)(req);
     if (result.type === 'OAUTH2') {
-      res.redirect(strategy.OAUTH2_URI);
+      res.redirect(308, strategy.OAUTH2_URI);
       return;
     }
     if (result.isSuccess) {
