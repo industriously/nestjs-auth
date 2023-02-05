@@ -1,4 +1,6 @@
-module.exports = {
+import type { Config } from 'jest';
+
+const config: Config = {
   roots: ['<rootDir>'],
   coverageDirectory: '<rootDir>/coverage',
   testEnvironment: 'node',
@@ -18,3 +20,5 @@ module.exports = {
   collectCoverageFrom: ['lib/**/*.(t|j)s'],
   coveragePathIgnorePatterns: ['lib/index.ts'],
 };
+
+export default config;
