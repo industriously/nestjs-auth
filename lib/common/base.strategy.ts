@@ -1,3 +1,4 @@
+import { isString } from '@LIB/utils';
 import { AuthException } from './auth-exception';
 import {
   Credentials,
@@ -36,7 +37,7 @@ export abstract class BaseAbstractStrategy<
 
   getCode(request: Request) {
     const code = request.query.code;
-    if (typeof code !== 'string') {
+    if (!isString(code)) {
       this.throw({ message: 'Fail to authenticate' });
     }
     return code;

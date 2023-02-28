@@ -1,7 +1,7 @@
 import { NotRequestKey, Request } from '@COMMON';
 import { VerifyOptions } from 'jsonwebtoken';
 
-export type JwtFromRequestFunction = (req: Request) => string | null;
+export type JwtFromRequestFunction = (req: Request) => unknown;
 
 export interface StrategyOptions<T extends string = 'user'> {
   /**

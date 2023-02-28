@@ -1,26 +1,27 @@
+import { isString } from '@LIB/utils';
 import { JwtFromRequestFunction } from './jwt.interface';
 
 export const Header =
   (name: string): JwtFromRequestFunction =>
   (req) =>
-    req.headers[name.toLowerCase()] as string;
+    req.headers[name.toLowerCase()];
 
 export const Body =
   (name: string): JwtFromRequestFunction =>
   (req) => {
-    const body = req.body as { [key: string]: string };
+    const body: any = req.body;
     return body[name];
   };
 
 export const Query =
   (name: string): JwtFromRequestFunction =>
   (req) =>
-    req.query[name] as string;
+    req.query[name];
 
 export const Cookie =
   (name: string): JwtFromRequestFunction =>
   (req) => {
-    const cookies = req.cookies as { [key: string]: string };
+    const cookies: any = req.cookies;
     return cookies[name];
   };
 
@@ -29,7 +30,7 @@ export const AuthorizationHeaderAsScheme =
   (req) => {
     const regex = new RegExp(`^${scheme}\\s+\\S+`, 'i');
     const header = req.headers['authorization'];
-    if (header == null) {
+    if (!isString(header)) {
       return null;
     }
     const token = header.match(regex);

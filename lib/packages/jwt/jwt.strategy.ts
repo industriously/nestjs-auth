@@ -1,4 +1,5 @@
 import { BaseAbstractStrategy, Request } from '@COMMON';
+import { isString } from '@LIB/utils';
 import { verify } from 'jsonwebtoken';
 import { StrategyOptions } from './jwt.interface';
 
@@ -14,7 +15,7 @@ export abstract class AbstractStrategy<
   override getCode(request: Request): string {
     for (const extractor of this.options.jwtFromRequest) {
       const jwt = extractor(request);
-      if (typeof jwt === 'string') {
+      if (isString(jwt)) {
         return jwt;
       }
     }

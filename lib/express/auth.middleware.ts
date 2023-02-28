@@ -17,6 +17,7 @@ export const AuthMiddleware =
     }
     if (result.isSuccess) {
       next();
+    } else {
+      throw new AuthException(401, 'Unauthorized');
     }
-    throw new AuthException(401, 'Unauthorized');
   };

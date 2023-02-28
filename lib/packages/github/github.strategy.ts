@@ -7,6 +7,7 @@ import type {
   Target,
   User,
 } from './github.interface';
+import { isString } from '@LIB/utils';
 
 export abstract class AbstractStrategy<
   K extends string = 'user',
@@ -37,7 +38,7 @@ export abstract class AbstractStrategy<
     if (!this.sdk.isSuccess<User>(user, statusCode)) {
       this.throw({ statusCode, message: 'Fail to access User Identity.' });
     }
-    if (user.email == null) {
+    if (!isString(user.email)) {
       const { data, statusCode } = await this.sdk.query(
         'user_emails',
         access_token,
